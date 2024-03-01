@@ -6,5 +6,5 @@ import com.example.gigirestaurantsapp.data.models.ResponseBody
  * @author Axel Sanchez
  */
 interface RestaurantRepository {
-    suspend fun getNearbyRestaurants(): ResponseBody
+    suspend fun getNearbyRestaurants(location: String): ResponseBody
 }

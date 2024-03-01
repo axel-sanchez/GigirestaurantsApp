@@ -1,10 +1,14 @@
 package com.example.gigirestaurantsapp.presentation
 
+import android.Manifest
+import android.app.AlertDialog
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -49,6 +53,7 @@ class NearbyRestaurantsFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        checkPermission()
 
         viewModel.getRestaurantsLiveData().observe(viewLifecycleOwner) { response ->
             updateView(response)
@@ -95,5 +100,44 @@ class NearbyRestaurantsFragment: Fragment() {
             )
             findNavController().navigate(R.id.action_searchFragment_to_detailsFragment, bundle, null, extras)
         }*/
+    }
+
+    private fun getLocation(): String{
+        return "-31.418119675147636, -64.49176343201465"
+    }
+
+    private fun checkPermission() {
+        if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            || ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            requestPermission()
+        }else{
+            viewModel.getRestaurants(getLocation())
+        }
+    }
+
+    private fun requestPermission() {
+        if(shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
+            || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        } else{
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode == 1){
+            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                viewModel.getRestaurants(getLocation())
+            }else{
+                val dialog = AlertDialog.Builder(requireContext())
+                    .setMessage(getString(R.string.need_granted_permission))
+                    .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                        requestPermission()
+                    }
+                    .create()
+                dialog.show()
+            }
+        }
     }
 }

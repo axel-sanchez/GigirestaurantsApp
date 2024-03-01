@@ -18,8 +18,8 @@ class RestaurantRepositoryImpl @Inject constructor(
     //, private val productLocalSource: ProductLocalSource
 ) : RestaurantRepository {
 
-    override suspend fun getNearbyRestaurants(): ResponseBody {
-        return restaurantRemoteSource.getNearbyRestaurants().value ?: ResponseBody(error = ApiError(
+    override suspend fun getNearbyRestaurants(location: String): ResponseBody {
+        return restaurantRemoteSource.getNearbyRestaurants(location).value ?: ResponseBody(error = ApiError(
             GENERIC_ERROR.text, GENERIC_ERROR.text, GENERIC_CODE))
 
         /*val localProducts = getLocalProducts()

@@ -9,12 +9,12 @@ import javax.inject.Singleton
  * @author Axel Sanchez
  */
 interface GetNearbyRestaurantsUseCase{
-    suspend fun call(): ResponseBody
+    suspend fun call(location: String): ResponseBody
 }
 
 @Singleton
 class GetNearbyRestaurantsUseCaseImpl @Inject constructor(private val repository: RestaurantRepository): GetNearbyRestaurantsUseCase {
-    override suspend fun call(): ResponseBody {
-        return repository.getNearbyRestaurants()
+    override suspend fun call(location: String): ResponseBody {
+        return repository.getNearbyRestaurants(location)
     }
 }

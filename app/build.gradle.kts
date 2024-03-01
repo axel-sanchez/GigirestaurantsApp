@@ -67,4 +67,8 @@ dependencies {
     //Room
     implementation("androidx.room:room-ktx:2.5.0")
     kapt("androidx.room:room-compiler:2.5.0")
+
+    //location
+    //implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    //implementation("com.google.android.gms:play-services-location:21.1.0")
 }

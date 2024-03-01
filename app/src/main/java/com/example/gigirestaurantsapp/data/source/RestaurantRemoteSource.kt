@@ -16,14 +16,14 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface RestaurantRemoteSource {
-    suspend fun getNearbyRestaurants(): MutableLiveData<ResponseBody>
+    suspend fun getNearbyRestaurants(location: String): MutableLiveData<ResponseBody>
 }
 
 @Singleton
 class RestaurantRemoteSourceImpl @Inject constructor(private val service: ApiServiceRestaurant,
                                                      private val networkHelper: NetworkHelper): RestaurantRemoteSource{
 
-    override suspend fun getNearbyRestaurants(): MutableLiveData<ResponseBody>{
+    override suspend fun getNearbyRestaurants(location: String): MutableLiveData<ResponseBody>{
         val mutableLiveData = MutableLiveData<ResponseBody>()
 
         try {
@@ -32,7 +32,7 @@ class RestaurantRemoteSourceImpl @Inject constructor(private val service: ApiSer
                 return mutableLiveData
             }
 
-            val response = service.getNearbyRestaurants(API_KEY, "-31.418119675147636, -64.49176343201465")
+            val response = service.getNearbyRestaurants(API_KEY, location)
             if (response.isSuccessful) {
                 Log.i("Successful Response", response.body().toString())
             } else {

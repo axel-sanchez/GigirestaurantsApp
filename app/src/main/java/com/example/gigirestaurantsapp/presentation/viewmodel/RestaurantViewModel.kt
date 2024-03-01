@@ -10,19 +10,15 @@ import kotlinx.coroutines.launch
  */
 class RestaurantViewModel(private val getNearbyRestaurantsUseCase: GetNearbyRestaurantsUseCase): ViewModel() {
 
-    private val listData: MutableLiveData<ResponseBody> by lazy {
-        MutableLiveData<ResponseBody>().also {
-            getRestaurants()
-        }
-    }
+    private val listData: MutableLiveData<ResponseBody> = MutableLiveData<ResponseBody>()
 
     private fun setListData(result: ResponseBody) {
         listData.postValue(result)
     }
 
-    private fun getRestaurants() {
+    fun getRestaurants(location: String) {
         viewModelScope.launch {
-            setListData(getNearbyRestaurantsUseCase.call())
+            setListData(getNearbyRestaurantsUseCase.call(location))
         }
     }
 
