@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gigirestaurantsapp.R
 import com.example.gigirestaurantsapp.core.MyApplication
@@ -21,8 +22,10 @@ import com.example.gigirestaurantsapp.domain.usecase.GetNearbyRestaurantsUseCase
 import com.example.gigirestaurantsapp.presentation.adapter.RestaurantAdapter
 import com.example.gigirestaurantsapp.presentation.viewmodel.RestaurantViewModel
 import com.example.gigirestaurantsapp.utils.Constants
+import com.example.gigirestaurantsapp.utils.LocationHelper
 import com.example.gigirestaurantsapp.utils.hide
 import com.example.gigirestaurantsapp.utils.show
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class NearbyRestaurantsFragment: Fragment() {
@@ -32,6 +35,8 @@ class NearbyRestaurantsFragment: Fragment() {
     private val viewModel: RestaurantViewModel by viewModels(
         factoryProducer = { RestaurantViewModel.RestaurantViewModelFactory(getNearbyRestaurantsUseCase) }
     )
+
+    private val locationHelper = LocationHelper()
 
     private var fragmentNearbyRestaurantsBinding: FragmentNearbyRestaurantsBinding? = null
     private val binding get() = fragmentNearbyRestaurantsBinding!!
@@ -102,8 +107,13 @@ class NearbyRestaurantsFragment: Fragment() {
         }*/
     }
 
-    private fun getLocation(): String{
-        return "-31.418119675147636, -64.49176343201465"
+    private fun getRestaurants(){
+        lifecycleScope.launch {
+            val location = locationHelper.getUserLocation(requireContext())
+            val latLong = "${location?.latitude}, ${location?.longitude}"
+            //viewModel.getRestaurants(latLong)
+            viewModel.getRestaurants("-31.418119675147636, -64.49176343201465")
+        }
     }
 
     private fun checkPermission() {
@@ -111,7 +121,7 @@ class NearbyRestaurantsFragment: Fragment() {
             || ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             requestPermission()
         }else{
-            viewModel.getRestaurants(getLocation())
+            getRestaurants()
         }
     }
 
@@ -128,7 +138,7 @@ class NearbyRestaurantsFragment: Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode == 1){
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                viewModel.getRestaurants(getLocation())
+                getRestaurants()
             }else{
                 val dialog = AlertDialog.Builder(requireContext())
                     .setMessage(getString(R.string.need_granted_permission))
