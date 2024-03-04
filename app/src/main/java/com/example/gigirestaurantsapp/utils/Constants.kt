@@ -13,6 +13,7 @@ object Constants {
     enum class ApiError(var text: String) {
         GENERIC_ERROR("Hubo un error al obtener los restaurantes"),
         EMPTY_RESTAURANTS("No se obtuvo ningún restaurante"),
+        EMPTY_FAVORITE_RESTAURANTS("No ha indicado que le gusta ningún restaurante"),
         NETWORK_ERROR("Hubo un error en la conexión de internet")
     }
 

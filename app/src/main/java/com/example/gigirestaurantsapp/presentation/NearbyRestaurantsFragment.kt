@@ -18,7 +18,9 @@ import com.example.gigirestaurantsapp.core.MyApplication
 import com.example.gigirestaurantsapp.data.models.ResponseBody
 import com.example.gigirestaurantsapp.data.models.Restaurant
 import com.example.gigirestaurantsapp.databinding.FragmentNearbyRestaurantsBinding
+import com.example.gigirestaurantsapp.domain.usecase.DeleteRestaurantUseCase
 import com.example.gigirestaurantsapp.domain.usecase.GetNearbyRestaurantsUseCase
+import com.example.gigirestaurantsapp.domain.usecase.SaveRestaurantUseCase
 import com.example.gigirestaurantsapp.presentation.adapter.RestaurantAdapter
 import com.example.gigirestaurantsapp.presentation.viewmodel.RestaurantViewModel
 import com.example.gigirestaurantsapp.utils.Constants
@@ -31,9 +33,11 @@ import javax.inject.Inject
 class NearbyRestaurantsFragment: Fragment() {
 
     @Inject lateinit var getNearbyRestaurantsUseCase: GetNearbyRestaurantsUseCase
+    @Inject lateinit var saveRestaurantUseCase: SaveRestaurantUseCase
+    @Inject lateinit var deleteRestaurantUseCase: DeleteRestaurantUseCase
 
     private val viewModel: RestaurantViewModel by viewModels(
-        factoryProducer = { RestaurantViewModel.RestaurantViewModelFactory(getNearbyRestaurantsUseCase) }
+        factoryProducer = { RestaurantViewModel.RestaurantViewModelFactory(getNearbyRestaurantsUseCase, saveRestaurantUseCase, deleteRestaurantUseCase) }
     )
 
     private val locationHelper = LocationHelper()
@@ -70,17 +74,17 @@ class NearbyRestaurantsFragment: Fragment() {
 
             response.restaurants?.let { restaurants ->
                 if (restaurants.isEmpty()) {
-                    rvProducts.hide()
+                    rvRestaurants.hide()
                     tvErrorText.text = Constants.ApiError.EMPTY_RESTAURANTS.text
                     cvEmptyState.show()
                 } else {
-                    rvProducts.show()
+                    rvRestaurants.show()
                     setAdapter(restaurants)
                 }
             }?: kotlin.run {
                 tvErrorText.text = response.error?.message
                 cvEmptyState.show()
-                rvProducts.hide()
+                rvRestaurants.hide()
             }
             cpiLoading.hide()
         }
@@ -89,11 +93,19 @@ class NearbyRestaurantsFragment: Fragment() {
     private fun setAdapter(restaurants: List<Restaurant?>) {
         val iconFav = resources.getDrawable(R.drawable.ic_fav)
         val iconNoFav = resources.getDrawable(R.drawable.ic_no_fav)
-        val restaurantsAdapter = RestaurantAdapter(restaurants, itemClick, iconFav, iconNoFav)
-        with(binding.rvProducts) {
+        val restaurantsAdapter = RestaurantAdapter(restaurants, itemClick, iconFav, iconNoFav, favRestaurant, unFavRestaurant)
+        with(binding.rvRestaurants) {
             layoutManager = LinearLayoutManager(context)
             adapter = restaurantsAdapter
         }
+    }
+
+    private val favRestaurant: (restaurant: Restaurant) -> Unit = {
+        viewModel.favRestaurant(it)
+    }
+
+    private val unFavRestaurant: (restaurant: Restaurant) -> Unit = {
+        viewModel.unFavRestaurant(it)
     }
 
     private val itemClick = { restaurant: Restaurant? ->

@@ -10,18 +10,21 @@ import com.example.gigirestaurantsapp.databinding.ItemRestaurantBinding
 /**
  * @author Axel Sanchez
  */
-class RestaurantAdapter(
-    private var mItems: List<Restaurant?>,
-    private val itemClick: (Restaurant?) -> Unit?,
+class FavoriteRestaurantsAdapter(
+    private var mItems: MutableList<Restaurant?>,
     private val iconFav: Drawable,
-    private val iconNoFav: Drawable,
-    private val favRestaurant: (restaurant: Restaurant) -> Unit,
-    private val unFavRestaurant: (restaurant: Restaurant) -> Unit
-) : RecyclerView.Adapter<RestaurantAdapter.ViewHolder>() {
+    private val unFavRestaurant: (restaurant: Restaurant) -> Unit,
+    private val itemClick: (Restaurant?) -> Unit?
+) : RecyclerView.Adapter<FavoriteRestaurantsAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemRestaurantBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Restaurant?, itemClick: (Restaurant?) -> Unit?, position: Int) {
+        fun bind(
+            item: Restaurant?,
+            itemClick: (Restaurant?) -> Unit?,
+            position: Int,
+            deleteItem: (Restaurant) -> Unit
+        ) {
 
             with(binding) {
                 item?.let { restaurant ->
@@ -29,19 +32,22 @@ class RestaurantAdapter(
                         itemClick(restaurant)
                     }
 
-                    ivFav.setOnClickListener{
-                        if (ivFav.drawable != iconFav){
-                            ivFav.setImageDrawable(iconFav)
-                            favRestaurant(restaurant)
-                        } else {
-                            ivFav.setImageDrawable(iconNoFav)
-                            unFavRestaurant(restaurant)
-                        }
+                    ivFav.setImageDrawable(iconFav)
+
+                    ivFav.setOnClickListener {
+                        unFavRestaurant(restaurant)
+                        deleteItem(restaurant)
                     }
                     tvName.text = restaurant.name
                 }
             }
         }
+    }
+
+    private val deleteItem = { restaurant: Restaurant ->
+        val position = mItems.indexOf(mItems.find { x -> x?.locationId == restaurant.locationId })
+        mItems.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -52,7 +58,7 @@ class RestaurantAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.bind(mItems[position], itemClick, position)
+        holder.bind(mItems[position], itemClick, position, deleteItem)
 
 
     override fun getItemCount() = mItems.size
