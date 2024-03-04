@@ -1,5 +1,6 @@
 package com.example.gigirestaurantsapp.data.source
 
+import androidx.lifecycle.LiveData
 import com.example.gigirestaurantsapp.data.models.Restaurant
 import com.example.gigirestaurantsapp.data.room.RestaurantDao
 import javax.inject.Inject
@@ -11,7 +12,7 @@ import javax.inject.Singleton
 interface RestaurantLocalSource {
     suspend fun insertRestaurant(restaurant: Restaurant)
     suspend fun deleteRestaurant(restaurant: Restaurant)
-    suspend fun getFavoriteRestaurants(): List<Restaurant>
+    fun getFavoriteRestaurants(): LiveData<List<Restaurant>>
 }
 
 @Singleton
@@ -26,7 +27,7 @@ class RestaurantLocalSourceImpl @Inject constructor(private val database: Restau
         database.deleteRestaurant(restaurant)
     }
 
-    override suspend fun getFavoriteRestaurants(): List<Restaurant> {
+    override fun getFavoriteRestaurants(): LiveData<List<Restaurant>> {
         return database.getFavoriteRestaurants()
     }
 }

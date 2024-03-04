@@ -10,44 +10,23 @@ import com.example.gigirestaurantsapp.domain.usecase.DeleteRestaurantUseCase
 import com.example.gigirestaurantsapp.domain.usecase.GetFavoriteRestaurantsUseCase
 import kotlinx.coroutines.launch
 
-class FavoriteRestaurantViewModel(private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase,
-                                  private val deleteRestaurantUseCase: DeleteRestaurantUseCase
+class FavoriteRestaurantViewModel(
+    private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase
 ) :
     ViewModel() {
 
-    private val listData: MutableLiveData<List<Restaurant>> by lazy {
-        MutableLiveData<List<Restaurant>>().also {
-            getRestaurants()
-        }
-    }
-
-    private fun setListData(result: List<Restaurant>) {
-        listData.postValue(result)
-    }
-
-    private fun getRestaurants() {
-        viewModelScope.launch {
-            setListData(getFavoriteRestaurantsUseCase.call())
-        }
-    }
-
     fun getRestaurantsLiveData(): LiveData<List<Restaurant>> {
-        return listData
-    }
-
-    fun unFavRestaurant(restaurant: Restaurant) {
-        viewModelScope.launch {
-            deleteRestaurantUseCase.call(restaurant)
-        }
+        return getFavoriteRestaurantsUseCase.call()
     }
 
     class FavoriteRestaurantViewModelFactory(
-        private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase,
-        private val deleteRestaurantUseCase: DeleteRestaurantUseCase
+        private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return modelClass.getConstructor(GetFavoriteRestaurantsUseCase::class.java, DeleteRestaurantUseCase::class.java)
-                .newInstance(getFavoriteRestaurantsUseCase, deleteRestaurantUseCase)
+            return modelClass.getConstructor(
+                GetFavoriteRestaurantsUseCase::class.java,
+            )
+                .newInstance(getFavoriteRestaurantsUseCase)
         }
     }
 }

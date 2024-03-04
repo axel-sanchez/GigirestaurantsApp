@@ -1,17 +1,18 @@
 package com.example.gigirestaurantsapp.domain.usecase
 
+import androidx.lifecycle.LiveData
 import com.example.gigirestaurantsapp.data.models.Restaurant
 import com.example.gigirestaurantsapp.domain.repository.RestaurantRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 interface GetFavoriteRestaurantsUseCase{
-    suspend fun call(): List<Restaurant>
+    fun call(): LiveData<List<Restaurant>>
 }
 
 @Singleton
 class GetFavoriteRestaurantsUseCaseImpl @Inject constructor(private val repository: RestaurantRepository): GetFavoriteRestaurantsUseCase {
-    override suspend fun call(): List<Restaurant> {
+    override fun call(): LiveData<List<Restaurant>> {
         return repository.getFavoriteRestaurants()
     }
 }

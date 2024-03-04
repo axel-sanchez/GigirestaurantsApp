@@ -1,5 +1,6 @@
 package com.example.gigirestaurantsapp.data.repository
 
+import androidx.lifecycle.LiveData
 import com.example.gigirestaurantsapp.data.models.ApiError
 import com.example.gigirestaurantsapp.data.models.ResponseBody
 import com.example.gigirestaurantsapp.data.models.Restaurant
@@ -25,7 +26,7 @@ class RestaurantRepositoryImpl @Inject constructor(
             GENERIC_ERROR.text, GENERIC_ERROR.text, GENERIC_CODE))
     }
 
-    override suspend fun getFavoriteRestaurants(): List<Restaurant> {
+    override fun getFavoriteRestaurants(): LiveData<List<Restaurant>> {
         return restaurantLocalSource.getFavoriteRestaurants()
     }
 

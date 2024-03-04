@@ -26,12 +26,11 @@ class FavoriteRestaurantsFragment : Fragment() {
 
     @Inject
     lateinit var getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase
-    @Inject lateinit var deleteRestaurantUseCase: DeleteRestaurantUseCase
 
     private val viewModel: FavoriteRestaurantViewModel by viewModels(
         factoryProducer = {
             FavoriteRestaurantViewModel.FavoriteRestaurantViewModelFactory(
-                getFavoriteRestaurantsUseCase, deleteRestaurantUseCase
+                getFavoriteRestaurantsUseCase
             )
         }
     )
@@ -76,6 +75,7 @@ class FavoriteRestaurantsFragment : Fragment() {
                 cvEmptyState.show()
             } else {
                 rvRestaurants.show()
+                cvEmptyState.hide()
                 setAdapter(restaurants)
             }
             cpiLoading.hide()
@@ -83,20 +83,14 @@ class FavoriteRestaurantsFragment : Fragment() {
     }
 
     private fun setAdapter(restaurants: List<Restaurant>) {
-        val iconFav = ResourcesCompat.getDrawable(resources, R.drawable.ic_fav, null)!!
         val restaurantsAdapter = FavoriteRestaurantsAdapter(
             restaurants.toMutableList(),
-            iconFav,
-            unFavRestaurant,
             itemClick
         )
         with(binding.rvRestaurants) {
             layoutManager = LinearLayoutManager(context)
             adapter = restaurantsAdapter
         }
-    }
-    private val unFavRestaurant: (restaurant: Restaurant) -> Unit = {
-        viewModel.unFavRestaurant(it)
     }
 
     private val itemClick = { restaurant: Restaurant? ->
@@ -108,9 +102,5 @@ class FavoriteRestaurantsFragment : Fragment() {
             )
             findNavController().navigate(R.id.action_searchFragment_to_detailsFragment, bundle, null, extras)
         }*/
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 }

@@ -1,5 +1,6 @@
 package com.example.gigirestaurantsapp.domain.repository
 
+import androidx.lifecycle.LiveData
 import com.example.gigirestaurantsapp.data.models.ResponseBody
 import com.example.gigirestaurantsapp.data.models.Restaurant
 
@@ -8,7 +9,7 @@ import com.example.gigirestaurantsapp.data.models.Restaurant
  */
 interface RestaurantRepository {
     suspend fun getNearbyRestaurants(location: String): ResponseBody
-    suspend fun getFavoriteRestaurants(): List<Restaurant>
+    fun getFavoriteRestaurants(): LiveData<List<Restaurant>>
     suspend fun saveRestaurant(restaurant: Restaurant)
     suspend fun deleteRestaurant(restaurant: Restaurant)
 }

@@ -1,5 +1,6 @@
 package com.example.gigirestaurantsapp.data.room
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -16,7 +17,7 @@ interface RestaurantDao {
     suspend fun getRestaurant(idRestaurant: Int): Restaurant
 
     @Query("SELECT * FROM Restaurant")
-    suspend fun getFavoriteRestaurants(): List<Restaurant>
+    fun getFavoriteRestaurants(): LiveData<List<Restaurant>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRestaurant(restaurant: Restaurant)
