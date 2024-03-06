@@ -19,5 +19,6 @@ data class Restaurant(
     val longitude: Double? = null,
     val email: String? = null,
     val phone: String? = null,
+    var isLiked: Boolean? = null
 )
 

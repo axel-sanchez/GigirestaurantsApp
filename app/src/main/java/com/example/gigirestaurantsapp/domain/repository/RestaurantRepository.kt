@@ -10,7 +10,7 @@ import com.example.gigirestaurantsapp.data.models.Restaurant
  */
 interface RestaurantRepository {
     suspend fun getNearbyRestaurants(location: String): RestaurantDTO
-    fun getFavoriteRestaurants(): LiveData<List<Restaurant>>
+    fun getFavRestaurantsLiveData(): LiveData<List<Restaurant>>
     suspend fun saveRestaurant(restaurant: Restaurant)
     suspend fun deleteRestaurant(restaurant: Restaurant)
     suspend fun getRestaurantDetails(locationId: Int): ResponseRestoDetails?

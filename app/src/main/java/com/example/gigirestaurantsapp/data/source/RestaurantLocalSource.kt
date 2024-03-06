@@ -12,7 +12,8 @@ import javax.inject.Singleton
 interface RestaurantLocalSource {
     suspend fun insertRestaurant(restaurant: Restaurant)
     suspend fun deleteRestaurant(restaurant: Restaurant)
-    fun getFavoriteRestaurants(): LiveData<List<Restaurant>>
+    fun getFavRestaurantsLiveData(): LiveData<List<Restaurant>>
+    suspend fun getFavRestaurantsList(): List<Restaurant>
 }
 
 @Singleton
@@ -27,7 +28,11 @@ class RestaurantLocalSourceImpl @Inject constructor(private val database: Restau
         database.deleteRestaurant(restaurant)
     }
 
-    override fun getFavoriteRestaurants(): LiveData<List<Restaurant>> {
-        return database.getFavoriteRestaurants()
+    override fun getFavRestaurantsLiveData(): LiveData<List<Restaurant>> {
+        return database.getFavRestaurantsLiveData()
+    }
+
+    override suspend fun getFavRestaurantsList(): List<Restaurant> {
+        return database.getFavRestaurantsList()
     }
 }

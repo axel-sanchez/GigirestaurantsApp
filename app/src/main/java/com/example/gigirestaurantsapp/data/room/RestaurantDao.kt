@@ -17,7 +17,10 @@ interface RestaurantDao {
     suspend fun getRestaurant(idRestaurant: Int): Restaurant
 
     @Query("SELECT * FROM Restaurant")
-    fun getFavoriteRestaurants(): LiveData<List<Restaurant>>
+    fun getFavRestaurantsLiveData(): LiveData<List<Restaurant>>
+
+    @Query("SELECT * FROM Restaurant")
+    suspend fun getFavRestaurantsList(): List<Restaurant>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRestaurant(restaurant: Restaurant)

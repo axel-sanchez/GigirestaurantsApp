@@ -23,16 +23,30 @@ class RestaurantRepositoryImpl @Inject constructor(
 ) : RestaurantRepository {
 
     override suspend fun getNearbyRestaurants(location: String): RestaurantDTO {
-        return restaurantRemoteSource.getNearbyRestaurants(location).value ?: RestaurantDTO(error = ApiError(
+
+        val nearbyRestaurants = restaurantRemoteSource.getNearbyRestaurants(location).value ?: RestaurantDTO(error = ApiError(
             GENERIC_ERROR.text, GENERIC_ERROR.text, GENERIC_CODE))
+
+        val likedRestaurantsLiveData = restaurantLocalSource.getFavRestaurantsList()
+
+        likedRestaurantsLiveData.forEach { restaurant ->
+            nearbyRestaurants.restaurants?.find {
+                if (restaurant.locationId == it?.locationId){
+                    it.isLiked = true
+                    true
+                } else false
+            }
+        }
+
+        return nearbyRestaurants
     }
 
     override suspend fun getRestaurantDetails(locationId: Int): ResponseRestoDetails? {
         return restaurantRemoteSource.getRestaurantDetails(locationId).value
     }
 
-    override fun getFavoriteRestaurants(): LiveData<List<Restaurant>> {
-        return restaurantLocalSource.getFavoriteRestaurants()
+    override fun getFavRestaurantsLiveData(): LiveData<List<Restaurant>> {
+        return restaurantLocalSource.getFavRestaurantsLiveData()
     }
 
     override suspend fun saveRestaurant(restaurant: Restaurant) {

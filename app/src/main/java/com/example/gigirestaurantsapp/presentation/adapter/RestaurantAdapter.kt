@@ -25,6 +25,9 @@ class RestaurantAdapter(
 
             with(binding) {
                 item?.let { restaurant ->
+
+                    if (item.isLiked == true) ivFav.setImageDrawable(iconFav)
+
                     itemView.setOnClickListener {
                         itemClick(restaurant)
                     }

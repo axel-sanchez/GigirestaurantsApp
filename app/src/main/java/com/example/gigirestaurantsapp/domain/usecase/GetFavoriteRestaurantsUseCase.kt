@@ -13,6 +13,6 @@ interface GetFavoriteRestaurantsUseCase{
 @Singleton
 class GetFavoriteRestaurantsUseCaseImpl @Inject constructor(private val repository: RestaurantRepository): GetFavoriteRestaurantsUseCase {
     override fun call(): LiveData<List<Restaurant>> {
-        return repository.getFavoriteRestaurants()
+        return repository.getFavRestaurantsLiveData()
     }
 }
