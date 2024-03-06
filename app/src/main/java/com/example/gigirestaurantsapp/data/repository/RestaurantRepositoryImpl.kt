@@ -21,7 +21,8 @@ import javax.inject.Singleton
 @Singleton
 class RestaurantRepositoryImpl @Inject constructor(
     private val restaurantRemoteSource: RestaurantRemoteSource,
-    private val restaurantLocalSource: RestaurantLocalSource
+    private val restaurantLocalSource: RestaurantLocalSource,
+    private val locationHelper: LocationHelper
 ) : RestaurantRepository {
 
     override suspend fun getNearbyRestaurants(location: String): RestaurantDTO {
@@ -38,8 +39,6 @@ class RestaurantRepositoryImpl @Inject constructor(
                     GENERIC_ERROR.text, GENERIC_ERROR.text, GENERIC_ERROR_CODE
                 )
             )
-
-        val locationHelper = LocationHelper()
 
         nearbyRestaurants.restaurants?.forEach {
             it?.let { restaurant ->

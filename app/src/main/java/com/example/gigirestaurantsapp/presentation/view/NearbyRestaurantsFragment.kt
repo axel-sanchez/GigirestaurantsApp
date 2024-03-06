@@ -3,12 +3,8 @@ package com.example.gigirestaurantsapp.presentation.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -19,13 +15,12 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gigirestaurantsapp.R
 import com.example.gigirestaurantsapp.core.MyApplication
-import com.example.gigirestaurantsapp.data.models.RestaurantDTO
 import com.example.gigirestaurantsapp.data.models.Restaurant
+import com.example.gigirestaurantsapp.data.models.RestaurantDTO
 import com.example.gigirestaurantsapp.databinding.FragmentNearbyRestaurantsBinding
 import com.example.gigirestaurantsapp.domain.usecase.DislikeRestaurantUseCase
 import com.example.gigirestaurantsapp.domain.usecase.GetNearbyRestaurantsUseCase
@@ -39,7 +34,6 @@ import com.example.gigirestaurantsapp.utils.hide
 import com.example.gigirestaurantsapp.utils.show
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class NearbyRestaurantsFragment : Fragment() {
@@ -170,15 +164,7 @@ class NearbyRestaurantsFragment : Fragment() {
             requestPermission()
         } else {
             if (locationHelper.isLocationEnabled(requireContext())){
-                fusedLocationClient.lastLocation
-                    .addOnSuccessListener { location ->
-                        if (location != null) {
-                            val latLong = "${location.latitude}, ${location.longitude}"
-                            viewModel.getRestaurants(latLong)
-                        } else{
-                            viewModel.getRestaurants("")
-                        }
-                    }
+                getRestaurants()
             } else{
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(intent)
@@ -207,6 +193,18 @@ class NearbyRestaurantsFragment : Fragment() {
     }
 
     @SuppressLint("MissingPermission")
+    private fun getRestaurants(){
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    val latLong = "${location.latitude}, ${location.longitude}"
+                    viewModel.getRestaurants(latLong)
+                } else{
+                    viewModel.getRestaurants("")
+                }
+            }
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -216,15 +214,7 @@ class NearbyRestaurantsFragment : Fragment() {
         if (requestCode == 1) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (locationHelper.isLocationEnabled(requireContext())){
-                    fusedLocationClient.lastLocation
-                        .addOnSuccessListener { location ->
-                            if (location != null) {
-                                val latLong = "${location.latitude}, ${location.longitude}"
-                                viewModel.getRestaurants(latLong)
-                            } else{
-                                viewModel.getRestaurants("")
-                            }
-                        }
+                    getRestaurants()
                 } else{
                     val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                     startActivity(intent)

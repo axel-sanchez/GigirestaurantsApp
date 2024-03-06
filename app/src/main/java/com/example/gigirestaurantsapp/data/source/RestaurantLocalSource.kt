@@ -19,11 +19,11 @@ interface RestaurantLocalSource {
 }
 
 @Singleton
-class RestaurantLocalSourceImpl @Inject constructor(private val database: RestaurantDao):
+class RestaurantLocalSourceImpl @Inject constructor(private val database: RestaurantDao, private val locationHelper: LocationHelper):
     RestaurantLocalSource {
 
     override suspend fun insertRestaurant(restaurant: Restaurant) {
-        val i = database.insertRestaurant(restaurant)
+        database.insertRestaurant(restaurant)
     }
 
     override suspend fun dislikeRestaurant(restaurant: Restaurant) {
@@ -39,7 +39,6 @@ class RestaurantLocalSourceImpl @Inject constructor(private val database: Restau
     }
 
     override suspend fun getNearbyRestaurants(location: String): List<Restaurant> {
-        val locationHelper = LocationHelper()
         val latitude = locationHelper.getLatitudeFromLocationString(location)
         val longitude = locationHelper.getLongitudeFromLocationString(location)
         return database.getNearbyRestaurants(latitude, longitude)

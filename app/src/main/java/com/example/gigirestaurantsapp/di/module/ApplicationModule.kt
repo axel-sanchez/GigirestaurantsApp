@@ -40,8 +40,8 @@ class ApplicationModule(private val context: Context){
 
     @Provides
     @Singleton
-    fun provideRestaurantRepository(restaurantRemoteSource: RestaurantRemoteSource, restaurantLocalSource: RestaurantLocalSource): RestaurantRepository{
-         return RestaurantRepositoryImpl(restaurantRemoteSource, restaurantLocalSource)
+    fun provideRestaurantRepository(restaurantRemoteSource: RestaurantRemoteSource, restaurantLocalSource: RestaurantLocalSource, locationHelper: LocationHelper): RestaurantRepository{
+         return RestaurantRepositoryImpl(restaurantRemoteSource, restaurantLocalSource, locationHelper)
     }
 
     @Provides
@@ -87,8 +87,8 @@ class ApplicationModule(private val context: Context){
 
     @Provides
     @Singleton
-    fun provideRestaurantLocalSource(database: Database): RestaurantLocalSource {
-        return RestaurantLocalSourceImpl(database.restaurantDao())
+    fun provideRestaurantLocalSource(database: Database, locationHelper: LocationHelper): RestaurantLocalSource {
+        return RestaurantLocalSourceImpl(database.restaurantDao(), locationHelper)
     }
 
     @Provides
