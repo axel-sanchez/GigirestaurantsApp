@@ -12,6 +12,8 @@ import com.example.gigirestaurantsapp.databinding.FragmentRestaurantDetailsBindi
 import com.example.gigirestaurantsapp.domain.usecase.GetRestaurantDetailsUseCase
 import com.example.gigirestaurantsapp.presentation.viewmodel.RestaurantDetailsViewModel
 import com.example.gigirestaurantsapp.utils.Constants.LOCATION_ID
+import com.example.gigirestaurantsapp.utils.hide
+import com.example.gigirestaurantsapp.utils.show
 import javax.inject.Inject
 
 class RestaurantDetailsFragment : Fragment() {
@@ -67,12 +69,35 @@ class RestaurantDetailsFragment : Fragment() {
     private fun updateView(response: ResponseRestoDetails?) {
         response?.let { restaurant ->
             with(binding) {
-                tvName.text = restaurant.name
-                tvDescription.text = restaurant.description
-                tvEmail.text = restaurant.email
-                tvPhone.text = restaurant.phone
-                tvRating.text = restaurant.rating
+                if (restaurant.name.isNullOrEmpty()){
+                    tvName.hide()
+                    tvTitleName.hide()
+                } else tvName.text = restaurant.name
+
+                if (restaurant.description.isNullOrEmpty()){
+                    tvDescription.hide()
+                    tvTitleDescription.hide()
+                } else tvDescription.text = restaurant.description
+
+                if (restaurant.email.isNullOrEmpty()){
+                    tvEmail.hide()
+                    tvTitleEmail.hide()
+                } else tvEmail.text = restaurant.email
+
+                if (restaurant.phone.isNullOrEmpty()){
+                    tvPhone.hide()
+                    tvTitlePhone.hide()
+                } else tvPhone.text = restaurant.phone
+
+                if (restaurant.rating.isNullOrEmpty()){
+                    tvRating.hide()
+                    tvTitleRating.hide()
+                } else tvRating.text = restaurant.rating
+
+                nsvDescription.show()
+                cpiLoading.hide()
             }
+
         }
     }
 }

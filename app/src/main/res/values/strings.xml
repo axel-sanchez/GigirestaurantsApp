@@ -3,4 +3,9 @@
     <string name="icon_fav">icon fav</string>
     <string name="ok">Ok</string>
     <string name="need_granted_permission">Tiene que aceptar los permisos para poder avanzar</string>
+    <string name="name">Nombre</string>
+    <string name="description">Descripcion</string>
+    <string name="email">Email</string>
+    <string name="telefono">Teléfono</string>
+    <string name="rating">Rating</string>
 </resources>
