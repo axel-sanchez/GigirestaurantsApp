@@ -1,7 +1,7 @@
 package com.example.gigirestaurantsapp.presentation.viewmodel
 
 import androidx.lifecycle.*
-import com.example.gigirestaurantsapp.data.models.ResponseBody
+import com.example.gigirestaurantsapp.data.models.RestaurantDTO
 import com.example.gigirestaurantsapp.data.models.Restaurant
 import com.example.gigirestaurantsapp.domain.usecase.DeleteRestaurantUseCase
 import com.example.gigirestaurantsapp.domain.usecase.GetNearbyRestaurantsUseCase
@@ -16,9 +16,9 @@ class RestaurantViewModel(private val getNearbyRestaurantsUseCase: GetNearbyRest
     private val deleteRestaurantUseCase: DeleteRestaurantUseCase
 ): ViewModel() {
 
-    private val listData: MutableLiveData<ResponseBody> = MutableLiveData<ResponseBody>()
+    private val listData: MutableLiveData<RestaurantDTO> = MutableLiveData<RestaurantDTO>()
 
-    private fun setListData(result: ResponseBody) {
+    private fun setListData(result: RestaurantDTO) {
         listData.postValue(result)
     }
 
@@ -28,7 +28,7 @@ class RestaurantViewModel(private val getNearbyRestaurantsUseCase: GetNearbyRest
         }
     }
 
-    fun getRestaurantsLiveData(): LiveData<ResponseBody> {
+    fun getRestaurantsLiveData(): LiveData<RestaurantDTO> {
         return listData
     }
 

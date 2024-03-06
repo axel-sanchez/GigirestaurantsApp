@@ -17,6 +17,8 @@ import com.example.gigirestaurantsapp.domain.usecase.GetFavoriteRestaurantsUseCa
 import com.example.gigirestaurantsapp.domain.usecase.GetFavoriteRestaurantsUseCaseImpl
 import com.example.gigirestaurantsapp.domain.usecase.GetNearbyRestaurantsUseCase
 import com.example.gigirestaurantsapp.domain.usecase.GetNearbyRestaurantsUseCaseImpl
+import com.example.gigirestaurantsapp.domain.usecase.GetRestaurantDetailsUseCase
+import com.example.gigirestaurantsapp.domain.usecase.GetRestaurantDetailsUseCaseImpl
 import com.example.gigirestaurantsapp.domain.usecase.SaveRestaurantUseCase
 import com.example.gigirestaurantsapp.domain.usecase.SaveRestaurantUseCaseImpl
 import com.example.gigirestaurantsapp.utils.Constants.BASE_URL
@@ -44,6 +46,10 @@ class ApplicationModule(private val context: Context){
     @Provides
     @Singleton
     fun provideGetNearbyRestaurantsUseCase(getNearbyRestaurantsUseCase: GetNearbyRestaurantsUseCaseImpl): GetNearbyRestaurantsUseCase = getNearbyRestaurantsUseCase
+
+    @Provides
+    @Singleton
+    fun provideGetRestaurantDetailsUseCase(getRestaurantDetailsUseCase: GetRestaurantDetailsUseCaseImpl): GetRestaurantDetailsUseCase = getRestaurantDetailsUseCase
 
     @Provides
     @Singleton

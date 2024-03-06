@@ -1,4 +1,4 @@
-package com.example.gigirestaurantsapp.presentation
+package com.example.gigirestaurantsapp.presentation.view
 
 import android.Manifest
 import android.app.AlertDialog
@@ -9,13 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gigirestaurantsapp.R
 import com.example.gigirestaurantsapp.core.MyApplication
-import com.example.gigirestaurantsapp.data.models.ResponseBody
+import com.example.gigirestaurantsapp.data.models.RestaurantDTO
 import com.example.gigirestaurantsapp.data.models.Restaurant
 import com.example.gigirestaurantsapp.databinding.FragmentNearbyRestaurantsBinding
 import com.example.gigirestaurantsapp.domain.usecase.DeleteRestaurantUseCase
@@ -24,6 +26,7 @@ import com.example.gigirestaurantsapp.domain.usecase.SaveRestaurantUseCase
 import com.example.gigirestaurantsapp.presentation.adapter.RestaurantAdapter
 import com.example.gigirestaurantsapp.presentation.viewmodel.RestaurantViewModel
 import com.example.gigirestaurantsapp.utils.Constants
+import com.example.gigirestaurantsapp.utils.Constants.LOCATION_ID
 import com.example.gigirestaurantsapp.utils.LocationHelper
 import com.example.gigirestaurantsapp.utils.hide
 import com.example.gigirestaurantsapp.utils.show
@@ -69,7 +72,7 @@ class NearbyRestaurantsFragment: Fragment() {
         }
     }
 
-    private fun updateView(response: ResponseBody) {
+    private fun updateView(response: RestaurantDTO) {
         with(binding) {
 
             response.restaurants?.let { restaurants ->
@@ -110,13 +113,10 @@ class NearbyRestaurantsFragment: Fragment() {
 
     private val itemClick = { restaurant: Restaurant? ->
         Toast.makeText(context, restaurant?.name, Toast.LENGTH_SHORT).show()
-        /*product?.let {
-            val bundle = bundleOf(ID_PRODUCT to it.id)
-            val extras = FragmentNavigatorExtras(
-                imageView to ID_IMAGE_VIEW
-            )
-            findNavController().navigate(R.id.action_searchFragment_to_detailsFragment, bundle, null, extras)
-        }*/
+        restaurant?.let {
+            val bundle = bundleOf(LOCATION_ID to it.locationId)
+            findNavController().navigate(R.id.action_mainFragment_to_restaurantDetailsFragment, bundle, null, null)
+        }
     }
 
     private fun getRestaurants(){

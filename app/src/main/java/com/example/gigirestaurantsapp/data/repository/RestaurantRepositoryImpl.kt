@@ -2,7 +2,8 @@ package com.example.gigirestaurantsapp.data.repository
 
 import androidx.lifecycle.LiveData
 import com.example.gigirestaurantsapp.data.models.ApiError
-import com.example.gigirestaurantsapp.data.models.ResponseBody
+import com.example.gigirestaurantsapp.data.models.ResponseRestoDetails
+import com.example.gigirestaurantsapp.data.models.RestaurantDTO
 import com.example.gigirestaurantsapp.data.models.Restaurant
 import com.example.gigirestaurantsapp.data.source.RestaurantLocalSource
 import com.example.gigirestaurantsapp.data.source.RestaurantRemoteSource
@@ -21,9 +22,13 @@ class RestaurantRepositoryImpl @Inject constructor(
     private val restaurantLocalSource: RestaurantLocalSource
 ) : RestaurantRepository {
 
-    override suspend fun getNearbyRestaurants(location: String): ResponseBody {
-        return restaurantRemoteSource.getNearbyRestaurants(location).value ?: ResponseBody(error = ApiError(
+    override suspend fun getNearbyRestaurants(location: String): RestaurantDTO {
+        return restaurantRemoteSource.getNearbyRestaurants(location).value ?: RestaurantDTO(error = ApiError(
             GENERIC_ERROR.text, GENERIC_ERROR.text, GENERIC_CODE))
+    }
+
+    override suspend fun getRestaurantDetails(locationId: Int): ResponseRestoDetails? {
+        return restaurantRemoteSource.getRestaurantDetails(locationId).value
     }
 
     override fun getFavoriteRestaurants(): LiveData<List<Restaurant>> {

@@ -1,4 +1,4 @@
-package com.example.gigirestaurantsapp.presentation
+package com.example.gigirestaurantsapp.presentation.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
