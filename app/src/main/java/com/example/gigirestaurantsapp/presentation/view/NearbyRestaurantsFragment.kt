@@ -162,4 +162,12 @@ class NearbyRestaurantsFragment: Fragment() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        with(binding){
+            rvRestaurants.hide()
+            cpiLoading.show()
+        }
+    }
 }
