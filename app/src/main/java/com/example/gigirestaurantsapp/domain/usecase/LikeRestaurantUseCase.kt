@@ -5,13 +5,13 @@ import com.example.gigirestaurantsapp.domain.repository.RestaurantRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface SaveRestaurantUseCase{
+interface LikeRestaurantUseCase{
     suspend fun call(restaurant: Restaurant)
 }
 
 @Singleton
-class SaveRestaurantUseCaseImpl @Inject constructor(private val repository: RestaurantRepository): SaveRestaurantUseCase {
+class LikeRestaurantUseCaseImpl @Inject constructor(private val repository: RestaurantRepository): LikeRestaurantUseCase {
     override suspend fun call(restaurant: Restaurant) {
-        repository.saveRestaurant(restaurant)
+        repository.likeRestaurant(restaurant)
     }
 }

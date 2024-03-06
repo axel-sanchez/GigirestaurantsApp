@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
@@ -21,9 +20,9 @@ import com.example.gigirestaurantsapp.core.MyApplication
 import com.example.gigirestaurantsapp.data.models.RestaurantDTO
 import com.example.gigirestaurantsapp.data.models.Restaurant
 import com.example.gigirestaurantsapp.databinding.FragmentNearbyRestaurantsBinding
-import com.example.gigirestaurantsapp.domain.usecase.DeleteRestaurantUseCase
+import com.example.gigirestaurantsapp.domain.usecase.DislikeRestaurantUseCase
 import com.example.gigirestaurantsapp.domain.usecase.GetNearbyRestaurantsUseCase
-import com.example.gigirestaurantsapp.domain.usecase.SaveRestaurantUseCase
+import com.example.gigirestaurantsapp.domain.usecase.LikeRestaurantUseCase
 import com.example.gigirestaurantsapp.presentation.adapter.RestaurantAdapter
 import com.example.gigirestaurantsapp.presentation.viewmodel.RestaurantViewModel
 import com.example.gigirestaurantsapp.utils.Constants
@@ -37,11 +36,11 @@ import javax.inject.Inject
 class NearbyRestaurantsFragment: Fragment() {
 
     @Inject lateinit var getNearbyRestaurantsUseCase: GetNearbyRestaurantsUseCase
-    @Inject lateinit var saveRestaurantUseCase: SaveRestaurantUseCase
-    @Inject lateinit var deleteRestaurantUseCase: DeleteRestaurantUseCase
+    @Inject lateinit var likeRestaurantUseCase: LikeRestaurantUseCase
+    @Inject lateinit var dislikeRestaurantUseCase: DislikeRestaurantUseCase
 
     private val viewModel: RestaurantViewModel by viewModels(
-        factoryProducer = { RestaurantViewModel.RestaurantViewModelFactory(getNearbyRestaurantsUseCase, saveRestaurantUseCase, deleteRestaurantUseCase) }
+        factoryProducer = { RestaurantViewModel.RestaurantViewModelFactory(getNearbyRestaurantsUseCase, likeRestaurantUseCase, dislikeRestaurantUseCase) }
     )
 
     private val locationHelper = LocationHelper()

@@ -1,14 +1,10 @@
 package com.example.gigirestaurantsapp.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.example.gigirestaurantsapp.data.models.Restaurant
-import com.example.gigirestaurantsapp.domain.usecase.DeleteRestaurantUseCase
 import com.example.gigirestaurantsapp.domain.usecase.GetFavoriteRestaurantsUseCase
-import kotlinx.coroutines.launch
 
 class FavoriteRestaurantViewModel(
     private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase

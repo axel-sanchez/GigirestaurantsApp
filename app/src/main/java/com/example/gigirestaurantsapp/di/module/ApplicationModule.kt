@@ -11,16 +11,16 @@ import com.example.gigirestaurantsapp.data.source.RestaurantLocalSourceImpl
 import com.example.gigirestaurantsapp.data.source.RestaurantRemoteSource
 import com.example.gigirestaurantsapp.data.source.RestaurantRemoteSourceImpl
 import com.example.gigirestaurantsapp.domain.repository.RestaurantRepository
-import com.example.gigirestaurantsapp.domain.usecase.DeleteRestaurantUseCase
-import com.example.gigirestaurantsapp.domain.usecase.DeleteRestaurantUseCaseImpl
+import com.example.gigirestaurantsapp.domain.usecase.DislikeRestaurantUseCase
+import com.example.gigirestaurantsapp.domain.usecase.DislikeRestaurantUseCaseImpl
 import com.example.gigirestaurantsapp.domain.usecase.GetFavoriteRestaurantsUseCase
 import com.example.gigirestaurantsapp.domain.usecase.GetFavoriteRestaurantsUseCaseImpl
 import com.example.gigirestaurantsapp.domain.usecase.GetNearbyRestaurantsUseCase
 import com.example.gigirestaurantsapp.domain.usecase.GetNearbyRestaurantsUseCaseImpl
 import com.example.gigirestaurantsapp.domain.usecase.GetRestaurantDetailsUseCase
 import com.example.gigirestaurantsapp.domain.usecase.GetRestaurantDetailsUseCaseImpl
-import com.example.gigirestaurantsapp.domain.usecase.SaveRestaurantUseCase
-import com.example.gigirestaurantsapp.domain.usecase.SaveRestaurantUseCaseImpl
+import com.example.gigirestaurantsapp.domain.usecase.LikeRestaurantUseCase
+import com.example.gigirestaurantsapp.domain.usecase.LikeRestaurantUseCaseImpl
 import com.example.gigirestaurantsapp.utils.Constants.BASE_URL
 import com.example.gigirestaurantsapp.utils.NetworkHelper
 import dagger.Module
@@ -57,11 +57,11 @@ class ApplicationModule(private val context: Context){
 
     @Provides
     @Singleton
-    fun provideSaveRestaurantUseCase(saveRestaurantUseCase: SaveRestaurantUseCaseImpl): SaveRestaurantUseCase = saveRestaurantUseCase
+    fun provideSaveRestaurantUseCase(saveRestaurantUseCase: LikeRestaurantUseCaseImpl): LikeRestaurantUseCase = saveRestaurantUseCase
 
     @Provides
     @Singleton
-    fun provideDeleteRestaurantUseCase(deleteRestaurantUseCase: DeleteRestaurantUseCaseImpl): DeleteRestaurantUseCase = deleteRestaurantUseCase
+    fun provideDeleteRestaurantUseCase(deleteRestaurantUseCase: DislikeRestaurantUseCaseImpl): DislikeRestaurantUseCase = deleteRestaurantUseCase
 
     @Provides
     @Singleton
@@ -76,7 +76,7 @@ class ApplicationModule(private val context: Context){
     @Singleton
     fun provideDatabase(context: Context): Database {
         return Room
-            .databaseBuilder(context, Database::class.java, "GigirestaurantsDB.db2")
+            .databaseBuilder(context, Database::class.java, "GigirestaurantsDB.db3")
             .build()
     }
 

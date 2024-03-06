@@ -11,7 +11,7 @@ import com.example.gigirestaurantsapp.data.models.Restaurant
  */
 @Database(
     entities = [Restaurant::class, Address::class],
-    version = 2
+    version = 3
 )
 @TypeConverters(Converters::class)
 abstract class Database: RoomDatabase() {

@@ -10,6 +10,7 @@ import com.example.gigirestaurantsapp.data.source.RestaurantRemoteSource
 import com.example.gigirestaurantsapp.domain.repository.RestaurantRepository
 import com.example.gigirestaurantsapp.utils.Constants.ApiError.*
 import com.example.gigirestaurantsapp.utils.Constants.GENERIC_CODE
+import com.example.gigirestaurantsapp.utils.LocationHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,21 +25,28 @@ class RestaurantRepositoryImpl @Inject constructor(
 
     override suspend fun getNearbyRestaurants(location: String): RestaurantDTO {
 
-        val nearbyRestaurants = restaurantRemoteSource.getNearbyRestaurants(location).value ?: RestaurantDTO(error = ApiError(
-            GENERIC_ERROR.text, GENERIC_ERROR.text, GENERIC_CODE))
+        val localNearbyRestaurants = restaurantLocalSource.getNearbyRestaurants(location)
 
-        val likedRestaurantsLiveData = restaurantLocalSource.getFavRestaurantsList()
+        if (localNearbyRestaurants.isNotEmpty()) return RestaurantDTO(localNearbyRestaurants, null)
 
-        likedRestaurantsLiveData.forEach { restaurant ->
-            nearbyRestaurants.restaurants?.find {
-                if (restaurant.locationId == it?.locationId){
-                    it.isLiked = true
-                    true
-                } else false
+        val nearbyRestaurants =
+            restaurantRemoteSource.getNearbyRestaurants(location).value ?: RestaurantDTO(
+                error = ApiError(
+                    GENERIC_ERROR.text, GENERIC_ERROR.text, GENERIC_CODE
+                )
+            )
+
+        val locationHelper = LocationHelper()
+
+        nearbyRestaurants.restaurants?.forEach {
+            it?.let { restaurant ->
+                restaurant.latitude = locationHelper.getLatitudeFromLocationString(location).toDouble()
+                restaurant.longitude = locationHelper.getLongitudeFromLocationString(location).toDouble()
+                restaurantLocalSource.insertRestaurant(restaurant)
             }
         }
 
-        return nearbyRestaurants
+        return RestaurantDTO(restaurantLocalSource.getNearbyRestaurants(location), null)
     }
 
     override suspend fun getRestaurantDetails(locationId: Int): ResponseRestoDetails? {
@@ -49,11 +57,11 @@ class RestaurantRepositoryImpl @Inject constructor(
         return restaurantLocalSource.getFavRestaurantsLiveData()
     }
 
-    override suspend fun saveRestaurant(restaurant: Restaurant) {
-        restaurantLocalSource.insertRestaurant(restaurant)
+    override suspend fun likeRestaurant(restaurant: Restaurant) {
+        restaurantLocalSource.likeRestaurant(restaurant)
     }
 
-    override suspend fun deleteRestaurant(restaurant: Restaurant) {
-        restaurantLocalSource.deleteRestaurant(restaurant)
+    override suspend fun dislikeRestaurant(restaurant: Restaurant) {
+        restaurantLocalSource.dislikeRestaurant(restaurant)
     }
 }

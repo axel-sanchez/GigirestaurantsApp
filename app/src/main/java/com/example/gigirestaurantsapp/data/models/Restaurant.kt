@@ -15,8 +15,8 @@ data class Restaurant(
     val bearing: String? = null,
     @SerializedName("address_obj")
     val address: Address? = null,
-    val latitude: Double? = null,
-    val longitude: Double? = null,
+    var latitude: Double? = null,
+    var longitude: Double? = null,
     val email: String? = null,
     val phone: String? = null,
     var isLiked: Boolean? = null

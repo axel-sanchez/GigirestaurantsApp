@@ -3,17 +3,17 @@ package com.example.gigirestaurantsapp.presentation.viewmodel
 import androidx.lifecycle.*
 import com.example.gigirestaurantsapp.data.models.RestaurantDTO
 import com.example.gigirestaurantsapp.data.models.Restaurant
-import com.example.gigirestaurantsapp.domain.usecase.DeleteRestaurantUseCase
+import com.example.gigirestaurantsapp.domain.usecase.DislikeRestaurantUseCase
 import com.example.gigirestaurantsapp.domain.usecase.GetNearbyRestaurantsUseCase
-import com.example.gigirestaurantsapp.domain.usecase.SaveRestaurantUseCase
+import com.example.gigirestaurantsapp.domain.usecase.LikeRestaurantUseCase
 import kotlinx.coroutines.launch
 
 /**
  * @author Axel Sanchez
  */
 class RestaurantViewModel(private val getNearbyRestaurantsUseCase: GetNearbyRestaurantsUseCase,
-    private val saveRestaurantUseCase: SaveRestaurantUseCase,
-    private val deleteRestaurantUseCase: DeleteRestaurantUseCase
+                          private val likeRestaurantUseCase: LikeRestaurantUseCase,
+                          private val dislikeRestaurantUseCase: DislikeRestaurantUseCase
 ): ViewModel() {
 
     private val listData: MutableLiveData<RestaurantDTO> = MutableLiveData<RestaurantDTO>()
@@ -34,22 +34,24 @@ class RestaurantViewModel(private val getNearbyRestaurantsUseCase: GetNearbyRest
 
     fun favRestaurant(restaurant: Restaurant) {
         viewModelScope.launch {
-            saveRestaurantUseCase.call(restaurant)
+            restaurant.isLiked = true
+            likeRestaurantUseCase.call(restaurant)
         }
     }
 
     fun unFavRestaurant(restaurant: Restaurant) {
         viewModelScope.launch {
-            deleteRestaurantUseCase.call(restaurant)
+            restaurant.isLiked = false
+            dislikeRestaurantUseCase.call(restaurant)
         }
     }
 
     class RestaurantViewModelFactory(private val getNearbyRestaurantsUseCase: GetNearbyRestaurantsUseCase,
-                                     private val saveRestaurantUseCase: SaveRestaurantUseCase,
-                                     private val deleteRestaurantUseCase: DeleteRestaurantUseCase) : ViewModelProvider.Factory {
+                                     private val likeRestaurantUseCase: LikeRestaurantUseCase,
+                                     private val dislikeRestaurantUseCase: DislikeRestaurantUseCase) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return modelClass.getConstructor(GetNearbyRestaurantsUseCase::class.java, SaveRestaurantUseCase::class.java, DeleteRestaurantUseCase::class.java)
-                .newInstance(getNearbyRestaurantsUseCase, saveRestaurantUseCase, deleteRestaurantUseCase)
+            return modelClass.getConstructor(GetNearbyRestaurantsUseCase::class.java, LikeRestaurantUseCase::class.java, DislikeRestaurantUseCase::class.java)
+                .newInstance(getNearbyRestaurantsUseCase, likeRestaurantUseCase, dislikeRestaurantUseCase)
         }
     }
 }

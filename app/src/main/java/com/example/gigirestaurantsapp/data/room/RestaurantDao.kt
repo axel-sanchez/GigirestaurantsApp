@@ -6,6 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.gigirestaurantsapp.data.models.Restaurant
 
 /**
@@ -16,14 +17,17 @@ interface RestaurantDao {
     @Query("SELECT * FROM Restaurant where locationId = :idRestaurant")
     suspend fun getRestaurant(idRestaurant: Int): Restaurant
 
-    @Query("SELECT * FROM Restaurant")
+    @Query("SELECT * FROM Restaurant WHERE isLiked == 1")
     fun getFavRestaurantsLiveData(): LiveData<List<Restaurant>>
 
-    @Query("SELECT * FROM Restaurant")
-    suspend fun getFavRestaurantsList(): List<Restaurant>
+    @Query("SELECT * FROM Restaurant WHERE latitude = :latitude AND longitude = :longitude")
+    suspend fun getNearbyRestaurants(latitude: String, longitude: String): List<Restaurant>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRestaurant(restaurant: Restaurant)
+    suspend fun insertRestaurant(restaurant: Restaurant): Long
+
+    @Update
+    suspend fun updateRestaurant(restaurant: Restaurant)
 
     @Delete
     suspend fun deleteRestaurant(restaurant: Restaurant)
