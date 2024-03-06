@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -94,8 +95,8 @@ class NearbyRestaurantsFragment: Fragment() {
     }
 
     private fun setAdapter(restaurants: List<Restaurant?>) {
-        val iconFav = resources.getDrawable(R.drawable.ic_fav)
-        val iconNoFav = resources.getDrawable(R.drawable.ic_no_fav)
+        val iconFav = ResourcesCompat.getDrawable(resources, R.drawable.ic_fav, null)
+        val iconNoFav = ResourcesCompat.getDrawable(resources, R.drawable.ic_no_fav, null)
         val restaurantsAdapter = RestaurantAdapter(restaurants, itemClick, iconFav, iconNoFav, favRestaurant, unFavRestaurant)
         with(binding.rvRestaurants) {
             layoutManager = LinearLayoutManager(context)

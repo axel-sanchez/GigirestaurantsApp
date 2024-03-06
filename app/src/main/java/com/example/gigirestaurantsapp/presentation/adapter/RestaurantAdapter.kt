@@ -13,8 +13,8 @@ import com.example.gigirestaurantsapp.databinding.ItemRestaurantBinding
 class RestaurantAdapter(
     private var mItems: List<Restaurant?>,
     private val itemClick: (Restaurant?) -> Unit?,
-    private val iconFav: Drawable,
-    private val iconNoFav: Drawable,
+    private val iconFav: Drawable?,
+    private val iconNoFav: Drawable?,
     private val favRestaurant: (restaurant: Restaurant) -> Unit,
     private val unFavRestaurant: (restaurant: Restaurant) -> Unit
 ) : RecyclerView.Adapter<RestaurantAdapter.ViewHolder>() {
