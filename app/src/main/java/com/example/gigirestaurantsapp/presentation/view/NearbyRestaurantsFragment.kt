@@ -112,7 +112,6 @@ class NearbyRestaurantsFragment: Fragment() {
     }
 
     private val itemClick = { restaurant: Restaurant? ->
-        Toast.makeText(context, restaurant?.name, Toast.LENGTH_SHORT).show()
         restaurant?.let {
             val bundle = bundleOf(LOCATION_ID to it.locationId)
             findNavController().navigate(R.id.action_mainFragment_to_restaurantDetailsFragment, bundle, null, null)
