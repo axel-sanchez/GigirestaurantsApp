@@ -9,7 +9,8 @@ import com.example.gigirestaurantsapp.data.source.RestaurantLocalSource
 import com.example.gigirestaurantsapp.data.source.RestaurantRemoteSource
 import com.example.gigirestaurantsapp.domain.repository.RestaurantRepository
 import com.example.gigirestaurantsapp.utils.Constants.ApiError.*
-import com.example.gigirestaurantsapp.utils.Constants.GENERIC_CODE
+import com.example.gigirestaurantsapp.utils.Constants.GENERIC_ERROR_CODE
+import com.example.gigirestaurantsapp.utils.Constants.LOCATION_ERROR_CODE
 import com.example.gigirestaurantsapp.utils.LocationHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,6 +26,8 @@ class RestaurantRepositoryImpl @Inject constructor(
 
     override suspend fun getNearbyRestaurants(location: String): RestaurantDTO {
 
+        if (location.isEmpty()) return RestaurantDTO(null, ApiError(LOCATION_ERROR.text, LOCATION_ERROR.text, LOCATION_ERROR_CODE))
+
         val localNearbyRestaurants = restaurantLocalSource.getNearbyRestaurants(location)
 
         if (localNearbyRestaurants.isNotEmpty()) return RestaurantDTO(localNearbyRestaurants, null)
@@ -32,7 +35,7 @@ class RestaurantRepositoryImpl @Inject constructor(
         val nearbyRestaurants =
             restaurantRemoteSource.getNearbyRestaurants(location).value ?: RestaurantDTO(
                 error = ApiError(
-                    GENERIC_ERROR.text, GENERIC_ERROR.text, GENERIC_CODE
+                    GENERIC_ERROR.text, GENERIC_ERROR.text, GENERIC_ERROR_CODE
                 )
             )
 

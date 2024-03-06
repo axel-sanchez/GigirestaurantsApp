@@ -4,11 +4,13 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,6 +50,8 @@ class NearbyRestaurantsFragment : Fragment() {
     lateinit var likeRestaurantUseCase: LikeRestaurantUseCase
     @Inject
     lateinit var dislikeRestaurantUseCase: DislikeRestaurantUseCase
+
+    @Inject lateinit var locationHelper: LocationHelper
 
     private val viewModel: RestaurantViewModel by viewModels(
         factoryProducer = {
@@ -165,13 +169,20 @@ class NearbyRestaurantsFragment : Fragment() {
         ) {
             requestPermission()
         } else {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location ->
-                    if (location != null) {
-                        val latLong = "${location.latitude}, ${location.longitude}"
-                        viewModel.getRestaurants(latLong)
+            if (locationHelper.isLocationEnabled(requireContext())){
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location ->
+                        if (location != null) {
+                            val latLong = "${location.latitude}, ${location.longitude}"
+                            viewModel.getRestaurants(latLong)
+                        } else{
+                            viewModel.getRestaurants("")
+                        }
                     }
-                }
+            } else{
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivity(intent)
+            }
         }
     }
 
@@ -204,13 +215,20 @@ class NearbyRestaurantsFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 1) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                fusedLocationClient.lastLocation
-                    .addOnSuccessListener { location ->
-                        if (location != null) {
-                            val latLong = "${location.latitude}, ${location.longitude}"
-                            viewModel.getRestaurants(latLong)
+                if (locationHelper.isLocationEnabled(requireContext())){
+                    fusedLocationClient.lastLocation
+                        .addOnSuccessListener { location ->
+                            if (location != null) {
+                                val latLong = "${location.latitude}, ${location.longitude}"
+                                viewModel.getRestaurants(latLong)
+                            } else{
+                                viewModel.getRestaurants("")
+                            }
                         }
-                    }
+                } else{
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    startActivity(intent)
+                }
             } else {
                 val dialog = AlertDialog.Builder(requireContext())
                     .setMessage(getString(R.string.need_granted_permission))

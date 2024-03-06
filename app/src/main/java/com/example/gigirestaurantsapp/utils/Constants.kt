@@ -15,11 +15,13 @@ object Constants {
         GENERIC_ERROR("Hubo un error al obtener los restaurantes"),
         EMPTY_RESTAURANTS("No se obtuvo ningún restaurante"),
         EMPTY_FAVORITE_RESTAURANTS("No ha indicado que le gusta ningún restaurante"),
-        NETWORK_ERROR("Hubo un error en la conexión de internet")
+        NETWORK_ERROR("Hubo un error en la conexión de internet"),
+        LOCATION_ERROR("Hubo un error al obtener la ubicacion del dispositivo")
     }
 
     const val NETWORK_ERROR_CODE = 1
-    const val GENERIC_CODE = 2
+    const val GENERIC_ERROR_CODE = 2
+    const val LOCATION_ERROR_CODE = 3
 
     const val LOCATION_ID = "location id"
 }

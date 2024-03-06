@@ -22,6 +22,7 @@ import com.example.gigirestaurantsapp.domain.usecase.GetRestaurantDetailsUseCase
 import com.example.gigirestaurantsapp.domain.usecase.LikeRestaurantUseCase
 import com.example.gigirestaurantsapp.domain.usecase.LikeRestaurantUseCaseImpl
 import com.example.gigirestaurantsapp.utils.Constants.BASE_URL
+import com.example.gigirestaurantsapp.utils.LocationHelper
 import com.example.gigirestaurantsapp.utils.NetworkHelper
 import dagger.Module
 import dagger.Provides
@@ -62,6 +63,10 @@ class ApplicationModule(private val context: Context){
     @Provides
     @Singleton
     fun provideDeleteRestaurantUseCase(deleteRestaurantUseCase: DislikeRestaurantUseCaseImpl): DislikeRestaurantUseCase = deleteRestaurantUseCase
+
+    @Provides
+    @Singleton
+    fun provideLocationHelper() = LocationHelper()
 
     @Provides
     @Singleton

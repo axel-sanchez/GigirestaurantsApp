@@ -9,7 +9,7 @@ import com.example.gigirestaurantsapp.data.service.ApiServiceRestaurant
 import com.example.gigirestaurantsapp.utils.Constants.API_KEY
 import com.example.gigirestaurantsapp.utils.Constants.ApiError.GENERIC_ERROR
 import com.example.gigirestaurantsapp.utils.Constants.ApiError.NETWORK_ERROR
-import com.example.gigirestaurantsapp.utils.Constants.GENERIC_CODE
+import com.example.gigirestaurantsapp.utils.Constants.GENERIC_ERROR_CODE
 import com.example.gigirestaurantsapp.utils.Constants.NETWORK_ERROR_CODE
 import com.example.gigirestaurantsapp.utils.NetworkHelper
 import java.io.IOException
@@ -47,7 +47,7 @@ class RestaurantRemoteSourceImpl @Inject constructor(private val service: ApiSer
                 e.message?:"Error al obtener los restaurantes"
             )
             e.printStackTrace()
-            mutableLiveData.value = RestaurantDTO(error = ApiError(e.message?:GENERIC_ERROR.text, GENERIC_ERROR.text, GENERIC_CODE))
+            mutableLiveData.value = RestaurantDTO(error = ApiError(e.message?:GENERIC_ERROR.text, GENERIC_ERROR.text, GENERIC_ERROR_CODE))
         }
 
         return mutableLiveData
