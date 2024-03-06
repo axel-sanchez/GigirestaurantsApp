@@ -1,8 +1,13 @@
 package com.example.gigirestaurantsapp.presentation.view
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,26 +35,44 @@ import com.example.gigirestaurantsapp.utils.Constants.LOCATION_ID
 import com.example.gigirestaurantsapp.utils.LocationHelper
 import com.example.gigirestaurantsapp.utils.hide
 import com.example.gigirestaurantsapp.utils.show
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class NearbyRestaurantsFragment: Fragment() {
+class NearbyRestaurantsFragment : Fragment() {
 
-    @Inject lateinit var getNearbyRestaurantsUseCase: GetNearbyRestaurantsUseCase
-    @Inject lateinit var likeRestaurantUseCase: LikeRestaurantUseCase
-    @Inject lateinit var dislikeRestaurantUseCase: DislikeRestaurantUseCase
+    @Inject
+    lateinit var getNearbyRestaurantsUseCase: GetNearbyRestaurantsUseCase
+    @Inject
+    lateinit var likeRestaurantUseCase: LikeRestaurantUseCase
+    @Inject
+    lateinit var dislikeRestaurantUseCase: DislikeRestaurantUseCase
 
     private val viewModel: RestaurantViewModel by viewModels(
-        factoryProducer = { RestaurantViewModel.RestaurantViewModelFactory(getNearbyRestaurantsUseCase, likeRestaurantUseCase, dislikeRestaurantUseCase) }
+        factoryProducer = {
+            RestaurantViewModel.RestaurantViewModelFactory(
+                getNearbyRestaurantsUseCase,
+                likeRestaurantUseCase,
+                dislikeRestaurantUseCase
+            )
+        }
     )
 
-    private val locationHelper = LocationHelper()
+    private val fusedLocationClient: FusedLocationProviderClient by lazy {
+        LocationServices.getFusedLocationProviderClient(requireActivity())
+    }
 
     private var fragmentNearbyRestaurantsBinding: FragmentNearbyRestaurantsBinding? = null
     private val binding get() = fragmentNearbyRestaurantsBinding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        fragmentNearbyRestaurantsBinding = FragmentNearbyRestaurantsBinding.inflate(inflater, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        fragmentNearbyRestaurantsBinding =
+            FragmentNearbyRestaurantsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -84,7 +107,7 @@ class NearbyRestaurantsFragment: Fragment() {
                     rvRestaurants.show()
                     setAdapter(restaurants)
                 }
-            }?: kotlin.run {
+            } ?: kotlin.run {
                 tvErrorText.text = response.error?.message
                 cvEmptyState.show()
                 rvRestaurants.hide()
@@ -96,7 +119,14 @@ class NearbyRestaurantsFragment: Fragment() {
     private fun setAdapter(restaurants: List<Restaurant?>) {
         val iconFav = ResourcesCompat.getDrawable(resources, R.drawable.ic_fav, null)
         val iconNoFav = ResourcesCompat.getDrawable(resources, R.drawable.ic_no_fav, null)
-        val restaurantsAdapter = RestaurantAdapter(restaurants, itemClick, iconFav, iconNoFav, favRestaurant, unFavRestaurant)
+        val restaurantsAdapter = RestaurantAdapter(
+            restaurants,
+            itemClick,
+            iconFav,
+            iconNoFav,
+            favRestaurant,
+            unFavRestaurant
+        )
         with(binding.rvRestaurants) {
             layoutManager = LinearLayoutManager(context)
             adapter = restaurantsAdapter
@@ -114,43 +144,74 @@ class NearbyRestaurantsFragment: Fragment() {
     private val itemClick = { restaurant: Restaurant? ->
         restaurant?.let {
             val bundle = bundleOf(LOCATION_ID to it.locationId)
-            findNavController().navigate(R.id.action_mainFragment_to_restaurantDetailsFragment, bundle, null, null)
-        }
-    }
-
-    private fun getRestaurants(){
-        lifecycleScope.launch {
-            val location = locationHelper.getUserLocation(requireContext())
-            val latLong = "${location?.latitude}, ${location?.longitude}"
-            //viewModel.getRestaurants(latLong)
-            viewModel.getRestaurants("-31.418119675147636, -64.49176343201465")
+            findNavController().navigate(
+                R.id.action_mainFragment_to_restaurantDetailsFragment,
+                bundle,
+                null,
+                null
+            )
         }
     }
 
     private fun checkPermission() {
-        if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            || ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+            || ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             requestPermission()
-        }else{
-            getRestaurants()
+        } else {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location ->
+                    if (location != null) {
+                        val latLong = "${location.latitude}, ${location.longitude}"
+                        viewModel.getRestaurants(latLong)
+                    }
+                }
         }
     }
 
     private fun requestPermission() {
-        if(shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
-            || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), 1)
-        } else{
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
+            || shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
+        ) {
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ), 1
+            )
+        } else {
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ), 1
+            )
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    @SuppressLint("MissingPermission")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == 1){
-            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                getRestaurants()
-            }else{
+        if (requestCode == 1) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location ->
+                        if (location != null) {
+                            val latLong = "${location.latitude}, ${location.longitude}"
+                            viewModel.getRestaurants(latLong)
+                        }
+                    }
+            } else {
                 val dialog = AlertDialog.Builder(requireContext())
                     .setMessage(getString(R.string.need_granted_permission))
                     .setPositiveButton(getString(R.string.ok)) { _, _ ->
@@ -159,14 +220,6 @@ class NearbyRestaurantsFragment: Fragment() {
                     .create()
                 dialog.show()
             }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        with(binding){
-            rvRestaurants.hide()
-            cpiLoading.show()
         }
     }
 }
