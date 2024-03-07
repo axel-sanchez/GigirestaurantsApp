@@ -71,6 +71,8 @@ class FakeRepository : RestaurantRepository {
 
     companion object {
         const val LOCATION = "-31.418119675147636, -64.49176343201465"
+        const val LATITUDE = "-31.418119675147636"
+        const val LONGITUDE = "-64.49176343201465"
         const val QUERY = "Lomito"
     }
 }
