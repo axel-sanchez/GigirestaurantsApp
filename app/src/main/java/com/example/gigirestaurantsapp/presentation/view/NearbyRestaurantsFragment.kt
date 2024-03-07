@@ -8,8 +8,11 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
@@ -24,6 +27,7 @@ import com.example.gigirestaurantsapp.data.models.RestaurantDTO
 import com.example.gigirestaurantsapp.databinding.FragmentNearbyRestaurantsBinding
 import com.example.gigirestaurantsapp.domain.usecase.DislikeRestaurantUseCase
 import com.example.gigirestaurantsapp.domain.usecase.GetNearbyRestaurantsUseCase
+import com.example.gigirestaurantsapp.domain.usecase.GetRestaurantsBySearchUseCase
 import com.example.gigirestaurantsapp.domain.usecase.LikeRestaurantUseCase
 import com.example.gigirestaurantsapp.presentation.adapter.RestaurantAdapter
 import com.example.gigirestaurantsapp.presentation.viewmodel.RestaurantViewModel
@@ -36,6 +40,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import javax.inject.Inject
 
+
 class NearbyRestaurantsFragment : Fragment() {
 
     @Inject
@@ -44,6 +49,8 @@ class NearbyRestaurantsFragment : Fragment() {
     lateinit var likeRestaurantUseCase: LikeRestaurantUseCase
     @Inject
     lateinit var dislikeRestaurantUseCase: DislikeRestaurantUseCase
+    @Inject
+    lateinit var getRestaurantsBySearchUseCase: GetRestaurantsBySearchUseCase
 
     @Inject lateinit var locationHelper: LocationHelper
 
@@ -51,6 +58,7 @@ class NearbyRestaurantsFragment : Fragment() {
         factoryProducer = {
             RestaurantViewModel.RestaurantViewModelFactory(
                 getNearbyRestaurantsUseCase,
+                getRestaurantsBySearchUseCase,
                 likeRestaurantUseCase,
                 dislikeRestaurantUseCase
             )
@@ -86,7 +94,12 @@ class NearbyRestaurantsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         checkPermission()
+
+        viewModel.getRestaurantsBySearchLiveData().observe(viewLifecycleOwner) { response ->
+            updateView(response)
+        }
 
         viewModel.getRestaurantsLiveData().observe(viewLifecycleOwner) { response ->
             updateView(response)
@@ -228,6 +241,39 @@ class NearbyRestaurantsFragment : Fragment() {
                     .create()
                 dialog.show()
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        requireActivity().menuInflater.inflate(R.menu.menu_action_bar, menu)
+
+        val itSearch = menu.findItem(R.id.itSearch)
+        val searchView = itSearch.actionView as SearchView
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.getRestaurantsBySearch(query)
+                showLoading()
+                return false
+            }
+
+            override fun onQueryTextChange(p0: String): Boolean {
+                return false
+            }
+        })
+
+        searchView.setOnCloseListener {
+            showLoading()
+            getRestaurants()
+            false
+        }
+    }
+
+    private fun showLoading(){
+        with(binding){
+            rvRestaurants.hide()
+            cpiLoading.show()
         }
     }
 }

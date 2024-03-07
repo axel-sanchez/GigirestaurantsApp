@@ -18,6 +18,7 @@ import javax.inject.Singleton
 
 interface RestaurantRemoteSource {
     suspend fun getNearbyRestaurants(location: String): MutableLiveData<RestaurantDTO>
+    suspend fun getRestaurantsBySearch(query: String): MutableLiveData<RestaurantDTO>
     suspend fun getRestaurantDetails(locationId: Int): MutableLiveData<ResponseRestoDetails?>
 }
 
@@ -35,6 +36,34 @@ class RestaurantRemoteSourceImpl @Inject constructor(private val service: ApiSer
             }
 
             val response = service.getNearbyRestaurants(API_KEY, location)
+            if (response.isSuccessful) {
+                Log.i("Successful Response", response.body().toString())
+            } else {
+                Log.i("Error Response", response.errorBody().toString())
+            }
+            mutableLiveData.value = response.body()
+        } catch (e: IOException) {
+            Log.e(
+                "RestaurantRemoteSource",
+                e.message?:"Error al obtener los restaurantes"
+            )
+            e.printStackTrace()
+            mutableLiveData.value = RestaurantDTO(error = ApiError(e.message?:GENERIC_ERROR.text, GENERIC_ERROR.text, GENERIC_ERROR_CODE))
+        }
+
+        return mutableLiveData
+    }
+
+    override suspend fun getRestaurantsBySearch(query: String): MutableLiveData<RestaurantDTO> {
+        val mutableLiveData = MutableLiveData<RestaurantDTO>()
+
+        try {
+            if (!networkHelper.isOnline()) {
+                mutableLiveData.value = RestaurantDTO(error = ApiError(message = NETWORK_ERROR.text, type = NETWORK_ERROR.text, code = NETWORK_ERROR_CODE))
+                return mutableLiveData
+            }
+
+            val response = service.getRestaurantsBySearch(API_KEY, query)
             if (response.isSuccessful) {
                 Log.i("Successful Response", response.body().toString())
             } else {

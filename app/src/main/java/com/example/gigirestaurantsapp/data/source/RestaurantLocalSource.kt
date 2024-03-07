@@ -16,6 +16,7 @@ interface RestaurantLocalSource {
     suspend fun likeRestaurant(restaurant: Restaurant)
     fun getFavRestaurantsLiveData(): LiveData<List<Restaurant>>
     suspend fun getNearbyRestaurants(location: String): List<Restaurant>
+    suspend fun getRestaurantsBySearch(query: String): List<Restaurant>
 }
 
 @Singleton
@@ -42,5 +43,9 @@ class RestaurantLocalSourceImpl @Inject constructor(private val database: Restau
         val latitude = locationHelper.getLatitudeFromLocationString(location)
         val longitude = locationHelper.getLongitudeFromLocationString(location)
         return database.getNearbyRestaurants(latitude, longitude)
+    }
+
+    override suspend fun getRestaurantsBySearch(query: String): List<Restaurant> {
+        return database.getRestaurantsBySearch(query)
     }
 }

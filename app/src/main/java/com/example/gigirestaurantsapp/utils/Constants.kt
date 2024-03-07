@@ -8,6 +8,7 @@ object Constants {
     //Api
     const val BASE_URL = "https://api.content.tripadvisor.com/api/v1/location/"
     const val GET_NEARBY_RESTAURANTS = "nearby_search"
+    const val GET_RESTAURANTS_BY_SEARCH = "search"
     const val GET_RESTAURANT_DETAILS = "details"
     const val API_KEY = "D35A887E19AE4D5687F8D4F0E36D9BD2"
 

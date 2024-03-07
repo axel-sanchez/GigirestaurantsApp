@@ -23,6 +23,9 @@ interface RestaurantDao {
     @Query("SELECT * FROM Restaurant WHERE latitude = :latitude AND longitude = :longitude")
     suspend fun getNearbyRestaurants(latitude: String, longitude: String): List<Restaurant>
 
+    @Query("SELECT * FROM Restaurant WHERE `query` = :query")
+    suspend fun getRestaurantsBySearch(query: String): List<Restaurant>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRestaurant(restaurant: Restaurant): Long
 

@@ -3,6 +3,7 @@ package com.example.gigirestaurantsapp.data.service
 import com.example.gigirestaurantsapp.data.models.ResponseRestoDetails
 import com.example.gigirestaurantsapp.data.models.RestaurantDTO
 import com.example.gigirestaurantsapp.utils.Constants.GET_NEARBY_RESTAURANTS
+import com.example.gigirestaurantsapp.utils.Constants.GET_RESTAURANTS_BY_SEARCH
 import com.example.gigirestaurantsapp.utils.Constants.GET_RESTAURANT_DETAILS
 import retrofit2.Response
 import retrofit2.http.GET
@@ -21,4 +22,10 @@ interface ApiServiceRestaurant {
         @Path("locationId") locationId: Int,
         @Query("key") key: String
     ): Response<ResponseRestoDetails>
+
+    @GET(GET_RESTAURANTS_BY_SEARCH)
+    suspend fun getRestaurantsBySearch(
+        @Query("key") key: String,
+        @Query("searchQuery") query: String
+    ): Response<RestaurantDTO>
 }

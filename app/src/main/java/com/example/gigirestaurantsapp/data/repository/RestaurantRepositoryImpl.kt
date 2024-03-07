@@ -51,6 +51,29 @@ class RestaurantRepositoryImpl @Inject constructor(
         return RestaurantDTO(restaurantLocalSource.getNearbyRestaurants(location), null)
     }
 
+    override suspend fun getRestaurantsBySearch(query: String): RestaurantDTO {
+
+        val localNearbyRestaurants = restaurantLocalSource.getRestaurantsBySearch(query)
+
+        if (localNearbyRestaurants.isNotEmpty()) return RestaurantDTO(localNearbyRestaurants, null)
+
+        val restaurantsBySearch =
+            restaurantRemoteSource.getRestaurantsBySearch(query).value ?: RestaurantDTO(
+                error = ApiError(
+                    GENERIC_ERROR.text, GENERIC_ERROR.text, GENERIC_ERROR_CODE
+                )
+            )
+
+        restaurantsBySearch.restaurants?.forEach {
+            it?.let { restaurant ->
+                restaurant.query = query
+                restaurantLocalSource.insertRestaurant(restaurant)
+            }
+        }
+
+        return RestaurantDTO(restaurantLocalSource.getRestaurantsBySearch(query), null)
+    }
+
     override suspend fun getRestaurantDetails(locationId: Int): ResponseRestoDetails? {
         return restaurantRemoteSource.getRestaurantDetails(locationId).value
     }
