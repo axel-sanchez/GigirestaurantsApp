@@ -1,5 +1,7 @@
 package com.example.gigirestaurantsapp.utils
 
+import androidx.test.platform.app.InstrumentationRegistry
+
 object Constants {
     //Tab
     const val NEARBY_RESTAURANTS = "Restaurantes Cercanos"
@@ -25,4 +27,11 @@ object Constants {
     const val LOCATION_ERROR_CODE = 3
 
     const val LOCATION_ID = "location id"
+
+    val isRunningTest = try {
+        InstrumentationRegistry.getInstrumentation()
+        true
+    } catch (e: IllegalStateException) {
+        false
+    }
 }

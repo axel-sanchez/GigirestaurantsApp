@@ -2,6 +2,7 @@ package com.example.gigirestaurantsapp.di.module
 
 import android.content.Context
 import androidx.room.Room
+import com.example.gigirestaurantsapp.data.repository.FakeRepository
 import com.example.gigirestaurantsapp.data.repository.RestaurantRepositoryImpl
 import com.example.gigirestaurantsapp.data.room.Database
 import com.example.gigirestaurantsapp.data.service.ApiClient
@@ -24,6 +25,7 @@ import com.example.gigirestaurantsapp.domain.usecase.GetRestaurantsBySearchUseCa
 import com.example.gigirestaurantsapp.domain.usecase.LikeRestaurantUseCase
 import com.example.gigirestaurantsapp.domain.usecase.LikeRestaurantUseCaseImpl
 import com.example.gigirestaurantsapp.utils.Constants.BASE_URL
+import com.example.gigirestaurantsapp.utils.Constants.isRunningTest
 import com.example.gigirestaurantsapp.utils.LocationHelper
 import com.example.gigirestaurantsapp.utils.NetworkHelper
 import dagger.Module
@@ -43,7 +45,8 @@ class ApplicationModule(private val context: Context){
     @Provides
     @Singleton
     fun provideRestaurantRepository(restaurantRemoteSource: RestaurantRemoteSource, restaurantLocalSource: RestaurantLocalSource, locationHelper: LocationHelper): RestaurantRepository{
-         return RestaurantRepositoryImpl(restaurantRemoteSource, restaurantLocalSource, locationHelper)
+        return if (isRunningTest) FakeRepository()
+        else return RestaurantRepositoryImpl(restaurantRemoteSource, restaurantLocalSource, locationHelper)
     }
 
     @Provides

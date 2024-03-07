@@ -71,4 +71,13 @@ dependencies {
     //location
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("com.google.android.gms:play-services-location:18.0.0")
+
+    //TEST
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:3.12.4")
+    testImplementation("org.mockito:mockito-inline:2.13.0")
+    testImplementation("org.hamcrest:hamcrest-junit:2.0.0.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2")
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    debugImplementation("androidx.fragment:fragment-testing:1.5.5")
 }
