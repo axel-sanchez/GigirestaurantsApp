@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.gigirestaurantsapp.databinding.FragmentMainBinding
 import com.example.gigirestaurantsapp.presentation.adapter.ItemViewPager
 import com.example.gigirestaurantsapp.presentation.adapter.ViewPageAdapter
-import com.example.gigirestaurantsapp.utils.Constants.FAVORITE_RESTAURANTS
+import com.example.gigirestaurantsapp.utils.Constants.LIKED_RESTAURANTS
 import com.example.gigirestaurantsapp.utils.Constants.NEARBY_RESTAURANTS
 import java.util.LinkedList
 
@@ -35,7 +35,7 @@ class MainFragment: Fragment() {
     private fun setAdapter() {
         val list: MutableList<ItemViewPager> = LinkedList()
         list.add(ItemViewPager(NEARBY_RESTAURANTS, NearbyRestaurantsFragment()))
-        list.add(ItemViewPager(FAVORITE_RESTAURANTS, FavoriteRestaurantsFragment()))
+        list.add(ItemViewPager(LIKED_RESTAURANTS, LikedRestaurantsFragment()))
         val adapter = ViewPageAdapter(childFragmentManager, list)
         binding.viewpager.adapter = adapter
         binding.tabs.setupWithViewPager(binding.viewpager)

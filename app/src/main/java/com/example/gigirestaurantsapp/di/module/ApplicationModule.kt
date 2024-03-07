@@ -13,8 +13,8 @@ import com.example.gigirestaurantsapp.data.source.RestaurantRemoteSourceImpl
 import com.example.gigirestaurantsapp.domain.repository.RestaurantRepository
 import com.example.gigirestaurantsapp.domain.usecase.DislikeRestaurantUseCase
 import com.example.gigirestaurantsapp.domain.usecase.DislikeRestaurantUseCaseImpl
-import com.example.gigirestaurantsapp.domain.usecase.GetFavoriteRestaurantsUseCase
-import com.example.gigirestaurantsapp.domain.usecase.GetFavoriteRestaurantsUseCaseImpl
+import com.example.gigirestaurantsapp.domain.usecase.GetLikedRestaurantsUseCase
+import com.example.gigirestaurantsapp.domain.usecase.GetLikedRestaurantsUseCaseImpl
 import com.example.gigirestaurantsapp.domain.usecase.GetNearbyRestaurantsUseCase
 import com.example.gigirestaurantsapp.domain.usecase.GetNearbyRestaurantsUseCaseImpl
 import com.example.gigirestaurantsapp.domain.usecase.GetRestaurantDetailsUseCase
@@ -60,7 +60,7 @@ class ApplicationModule(private val context: Context){
 
     @Provides
     @Singleton
-    fun provideGetFavoriteRestaurantsUseCase(getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCaseImpl): GetFavoriteRestaurantsUseCase = getFavoriteRestaurantsUseCase
+    fun provideGetLikedRestaurantsUseCase(getLikedRestaurantsUseCase: GetLikedRestaurantsUseCaseImpl): GetLikedRestaurantsUseCase = getLikedRestaurantsUseCase
 
     @Provides
     @Singleton

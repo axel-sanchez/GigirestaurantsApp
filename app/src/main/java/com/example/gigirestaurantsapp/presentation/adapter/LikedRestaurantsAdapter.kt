@@ -4,17 +4,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gigirestaurantsapp.data.models.Restaurant
-import com.example.gigirestaurantsapp.databinding.ItemFavedRestaurantBinding
+import com.example.gigirestaurantsapp.databinding.ItemLikedRestaurantBinding
 
 /**
  * @author Axel Sanchez
  */
-class FavoriteRestaurantsAdapter(
+class LikedRestaurantsAdapter(
     private var mItems: MutableList<Restaurant?>,
     private val itemClick: (Restaurant?) -> Unit?
-) : RecyclerView.Adapter<FavoriteRestaurantsAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<LikedRestaurantsAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val binding: ItemFavedRestaurantBinding) :
+    inner class ViewHolder(private val binding: ItemLikedRestaurantBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(
             item: Restaurant?,
@@ -36,8 +36,8 @@ class FavoriteRestaurantsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val recyclerRowBinding: ItemFavedRestaurantBinding =
-            ItemFavedRestaurantBinding.inflate(layoutInflater, parent, false)
+        val recyclerRowBinding: ItemLikedRestaurantBinding =
+            ItemLikedRestaurantBinding.inflate(layoutInflater, parent, false)
         return ViewHolder(recyclerRowBinding)
     }
 

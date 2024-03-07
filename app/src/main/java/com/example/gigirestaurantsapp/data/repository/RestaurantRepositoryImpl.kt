@@ -78,8 +78,8 @@ class RestaurantRepositoryImpl @Inject constructor(
         return restaurantRemoteSource.getRestaurantDetails(locationId).value
     }
 
-    override fun getFavRestaurantsLiveData(): LiveData<List<Restaurant>> {
-        return restaurantLocalSource.getFavRestaurantsLiveData()
+    override fun getLikedRestaurantsLiveData(): LiveData<List<Restaurant>> {
+        return restaurantLocalSource.getLikedRestaurantsLiveData()
     }
 
     override suspend fun likeRestaurant(restaurant: Restaurant) {

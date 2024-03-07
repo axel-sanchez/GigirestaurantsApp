@@ -4,25 +4,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.gigirestaurantsapp.data.models.Restaurant
-import com.example.gigirestaurantsapp.domain.usecase.GetFavoriteRestaurantsUseCase
+import com.example.gigirestaurantsapp.domain.usecase.GetLikedRestaurantsUseCase
 
-class FavoriteRestaurantViewModel(
-    private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase
+class LikedRestaurantsViewModel(
+    private val getLikedRestaurantsUseCase: GetLikedRestaurantsUseCase
 ) :
     ViewModel() {
 
     fun getRestaurantsLiveData(): LiveData<List<Restaurant>> {
-        return getFavoriteRestaurantsUseCase.call()
+        return getLikedRestaurantsUseCase.call()
     }
 
-    class FavoriteRestaurantViewModelFactory(
-        private val getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase
+    class LikedRestaurantsViewModelFactory(
+        private val getLikedRestaurantsUseCase: GetLikedRestaurantsUseCase
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return modelClass.getConstructor(
-                GetFavoriteRestaurantsUseCase::class.java,
+                GetLikedRestaurantsUseCase::class.java,
             )
-                .newInstance(getFavoriteRestaurantsUseCase)
+                .newInstance(getLikedRestaurantsUseCase)
         }
     }
 }

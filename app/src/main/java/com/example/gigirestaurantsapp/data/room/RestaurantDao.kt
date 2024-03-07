@@ -18,7 +18,7 @@ interface RestaurantDao {
     suspend fun getRestaurant(idRestaurant: Int): Restaurant
 
     @Query("SELECT * FROM Restaurant WHERE isLiked == 1")
-    fun getFavRestaurantsLiveData(): LiveData<List<Restaurant>>
+    fun getLikedRestaurantsLiveData(): LiveData<List<Restaurant>>
 
     @Query("SELECT * FROM Restaurant WHERE latitude = :latitude AND longitude = :longitude")
     suspend fun getNearbyRestaurants(latitude: String, longitude: String): List<Restaurant>

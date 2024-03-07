@@ -3,7 +3,7 @@ package com.example.gigirestaurantsapp.utils
 object Constants {
     //Tab
     const val NEARBY_RESTAURANTS = "Restaurantes Cercanos"
-    const val FAVORITE_RESTAURANTS = "Restaurantes Favoritos"
+    const val LIKED_RESTAURANTS = "Restaurantes Favoritos"
 
     //Api
     const val BASE_URL = "https://api.content.tripadvisor.com/api/v1/location/"
@@ -15,7 +15,7 @@ object Constants {
     enum class ApiError(var text: String) {
         GENERIC_ERROR("Hubo un error al obtener los restaurantes"),
         EMPTY_RESTAURANTS("No se obtuvo ningún restaurante"),
-        EMPTY_FAVORITE_RESTAURANTS("No ha indicado que le gusta ningún restaurante"),
+        EMPTY_LIKED_RESTAURANTS("No ha indicado que le gusta ningún restaurante"),
         NETWORK_ERROR("Hubo un error en la conexión de internet"),
         LOCATION_ERROR("Hubo un error al obtener la ubicacion del dispositivo")
     }

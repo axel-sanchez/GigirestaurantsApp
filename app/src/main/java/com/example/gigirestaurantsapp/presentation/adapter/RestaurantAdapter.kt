@@ -13,10 +13,10 @@ import com.example.gigirestaurantsapp.databinding.ItemRestaurantBinding
 class RestaurantAdapter(
     private var mItems: List<Restaurant?>,
     private val itemClick: (Restaurant?) -> Unit?,
-    private val iconFav: Drawable?,
-    private val iconNoFav: Drawable?,
-    private val favRestaurant: (restaurant: Restaurant) -> Unit,
-    private val unFavRestaurant: (restaurant: Restaurant) -> Unit
+    private val iconLike: Drawable?,
+    private val iconDislike: Drawable?,
+    private val likeRestaurant: (restaurant: Restaurant) -> Unit,
+    private val dislikeRestaurant: (restaurant: Restaurant) -> Unit
 ) : RecyclerView.Adapter<RestaurantAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemRestaurantBinding) :
@@ -26,19 +26,19 @@ class RestaurantAdapter(
             with(binding) {
                 item?.let { restaurant ->
 
-                    if (item.isLiked == true) ivFav.setImageDrawable(iconFav)
+                    if (item.isLiked == true) ivLike.setImageDrawable(iconLike)
 
                     itemView.setOnClickListener {
                         itemClick(restaurant)
                     }
 
-                    ivFav.setOnClickListener{
-                        if (ivFav.drawable != iconFav){
-                            ivFav.setImageDrawable(iconFav)
-                            favRestaurant(restaurant)
+                    ivLike.setOnClickListener{
+                        if (ivLike.drawable != iconLike){
+                            ivLike.setImageDrawable(iconLike)
+                            likeRestaurant(restaurant)
                         } else {
-                            ivFav.setImageDrawable(iconNoFav)
-                            unFavRestaurant(restaurant)
+                            ivLike.setImageDrawable(iconDislike)
+                            dislikeRestaurant(restaurant)
                         }
                     }
                     tvName.text = restaurant.name

@@ -12,24 +12,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gigirestaurantsapp.R
 import com.example.gigirestaurantsapp.core.MyApplication
 import com.example.gigirestaurantsapp.data.models.Restaurant
-import com.example.gigirestaurantsapp.databinding.FragmentFavoriteRestaurantsBinding
-import com.example.gigirestaurantsapp.domain.usecase.GetFavoriteRestaurantsUseCase
-import com.example.gigirestaurantsapp.presentation.adapter.FavoriteRestaurantsAdapter
-import com.example.gigirestaurantsapp.presentation.viewmodel.FavoriteRestaurantViewModel
+import com.example.gigirestaurantsapp.databinding.FragmentLikedRestaurantsBinding
+import com.example.gigirestaurantsapp.domain.usecase.GetLikedRestaurantsUseCase
+import com.example.gigirestaurantsapp.presentation.adapter.LikedRestaurantsAdapter
+import com.example.gigirestaurantsapp.presentation.viewmodel.LikedRestaurantsViewModel
 import com.example.gigirestaurantsapp.utils.Constants
 import com.example.gigirestaurantsapp.utils.hide
 import com.example.gigirestaurantsapp.utils.show
 import javax.inject.Inject
 
-class FavoriteRestaurantsFragment : Fragment() {
+class LikedRestaurantsFragment : Fragment() {
 
     @Inject
-    lateinit var getFavoriteRestaurantsUseCase: GetFavoriteRestaurantsUseCase
+    lateinit var getLikedRestaurantsUseCase: GetLikedRestaurantsUseCase
 
-    private val viewModel: FavoriteRestaurantViewModel by viewModels(
+    private val viewModel: LikedRestaurantsViewModel by viewModels(
         factoryProducer = {
-            FavoriteRestaurantViewModel.FavoriteRestaurantViewModelFactory(
-                getFavoriteRestaurantsUseCase
+            LikedRestaurantsViewModel.LikedRestaurantsViewModelFactory(
+                getLikedRestaurantsUseCase
             )
         }
     )
@@ -39,22 +39,22 @@ class FavoriteRestaurantsFragment : Fragment() {
         (requireActivity().application as MyApplication).component.inject(this)
     }
 
-    private var fragmentFavoriteRestaurantsBinding: FragmentFavoriteRestaurantsBinding? = null
-    private val binding get() = fragmentFavoriteRestaurantsBinding!!
+    private var fragmentLikedRestaurantsBinding: FragmentLikedRestaurantsBinding? = null
+    private val binding get() = fragmentLikedRestaurantsBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        fragmentFavoriteRestaurantsBinding =
-            FragmentFavoriteRestaurantsBinding.inflate(inflater, container, false)
+        fragmentLikedRestaurantsBinding =
+            FragmentLikedRestaurantsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        fragmentFavoriteRestaurantsBinding = null
+        fragmentLikedRestaurantsBinding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,7 +70,7 @@ class FavoriteRestaurantsFragment : Fragment() {
 
             if (restaurants.isEmpty()) {
                 rvRestaurants.hide()
-                tvErrorText.text = Constants.ApiError.EMPTY_FAVORITE_RESTAURANTS.text
+                tvErrorText.text = Constants.ApiError.EMPTY_LIKED_RESTAURANTS.text
                 cvEmptyState.show()
             } else {
                 rvRestaurants.show()
@@ -82,7 +82,7 @@ class FavoriteRestaurantsFragment : Fragment() {
     }
 
     private fun setAdapter(restaurants: List<Restaurant>) {
-        val restaurantsAdapter = FavoriteRestaurantsAdapter(
+        val restaurantsAdapter = LikedRestaurantsAdapter(
             restaurants.toMutableList(),
             itemClick
         )

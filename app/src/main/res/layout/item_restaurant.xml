@@ -18,12 +18,12 @@
         android:layout_height="match_parent"/>
 
     <ImageView
-        android:id="@+id/ivFav"
+        android:id="@+id/ivLike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|center_vertical"
         android:layout_marginEnd="20dp"
-        android:src="@drawable/ic_no_fav"
-        android:contentDescription="@string/icon_fav" />
+        android:src="@drawable/ic_dislike"
+        android:contentDescription="@string/icon_liked" />
 
 </androidx.cardview.widget.CardView>

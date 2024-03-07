@@ -128,15 +128,15 @@ class NearbyRestaurantsFragment : Fragment() {
     }
 
     private fun setAdapter(restaurants: List<Restaurant?>) {
-        val iconFav = ResourcesCompat.getDrawable(resources, R.drawable.ic_fav, null)
-        val iconNoFav = ResourcesCompat.getDrawable(resources, R.drawable.ic_no_fav, null)
+        val iconLike = ResourcesCompat.getDrawable(resources, R.drawable.ic_like, null)
+        val iconDislike = ResourcesCompat.getDrawable(resources, R.drawable.ic_dislike, null)
         val restaurantsAdapter = RestaurantAdapter(
             restaurants,
             itemClick,
-            iconFav,
-            iconNoFav,
-            favRestaurant,
-            unFavRestaurant
+            iconLike,
+            iconDislike,
+            likeRestaurant,
+            dislikeRestaurant
         )
         with(binding.rvRestaurants) {
             layoutManager = LinearLayoutManager(context)
@@ -144,12 +144,12 @@ class NearbyRestaurantsFragment : Fragment() {
         }
     }
 
-    private val favRestaurant: (restaurant: Restaurant) -> Unit = {
-        viewModel.favRestaurant(it)
+    private val likeRestaurant: (restaurant: Restaurant) -> Unit = {
+        viewModel.likeRestaurant(it)
     }
 
-    private val unFavRestaurant: (restaurant: Restaurant) -> Unit = {
-        viewModel.unFavRestaurant(it)
+    private val dislikeRestaurant: (restaurant: Restaurant) -> Unit = {
+        viewModel.dislikeRestaurant(it)
     }
 
     private val itemClick = { restaurant: Restaurant? ->

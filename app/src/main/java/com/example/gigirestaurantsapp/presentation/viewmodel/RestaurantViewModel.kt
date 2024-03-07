@@ -49,14 +49,14 @@ class RestaurantViewModel(private val getNearbyRestaurantsUseCase: GetNearbyRest
         return listDataBySearch
     }
 
-    fun favRestaurant(restaurant: Restaurant) {
+    fun likeRestaurant(restaurant: Restaurant) {
         viewModelScope.launch {
             restaurant.isLiked = true
             likeRestaurantUseCase.call(restaurant)
         }
     }
 
-    fun unFavRestaurant(restaurant: Restaurant) {
+    fun dislikeRestaurant(restaurant: Restaurant) {
         viewModelScope.launch {
             restaurant.isLiked = false
             dislikeRestaurantUseCase.call(restaurant)

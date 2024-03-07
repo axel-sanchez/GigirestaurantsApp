@@ -14,7 +14,7 @@ interface RestaurantLocalSource {
     suspend fun insertRestaurant(restaurant: Restaurant)
     suspend fun dislikeRestaurant(restaurant: Restaurant)
     suspend fun likeRestaurant(restaurant: Restaurant)
-    fun getFavRestaurantsLiveData(): LiveData<List<Restaurant>>
+    fun getLikedRestaurantsLiveData(): LiveData<List<Restaurant>>
     suspend fun getNearbyRestaurants(location: String): List<Restaurant>
     suspend fun getRestaurantsBySearch(query: String): List<Restaurant>
 }
@@ -35,8 +35,8 @@ class RestaurantLocalSourceImpl @Inject constructor(private val database: Restau
         database.updateRestaurant(restaurant)
     }
 
-    override fun getFavRestaurantsLiveData(): LiveData<List<Restaurant>> {
-        return database.getFavRestaurantsLiveData()
+    override fun getLikedRestaurantsLiveData(): LiveData<List<Restaurant>> {
+        return database.getLikedRestaurantsLiveData()
     }
 
     override suspend fun getNearbyRestaurants(location: String): List<Restaurant> {

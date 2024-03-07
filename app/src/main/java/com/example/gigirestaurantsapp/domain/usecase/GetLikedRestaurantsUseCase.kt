@@ -6,13 +6,13 @@ import com.example.gigirestaurantsapp.domain.repository.RestaurantRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface GetFavoriteRestaurantsUseCase{
+interface GetLikedRestaurantsUseCase{
     fun call(): LiveData<List<Restaurant>>
 }
 
 @Singleton
-class GetFavoriteRestaurantsUseCaseImpl @Inject constructor(private val repository: RestaurantRepository): GetFavoriteRestaurantsUseCase {
+class GetLikedRestaurantsUseCaseImpl @Inject constructor(private val repository: RestaurantRepository): GetLikedRestaurantsUseCase {
     override fun call(): LiveData<List<Restaurant>> {
-        return repository.getFavRestaurantsLiveData()
+        return repository.getLikedRestaurantsLiveData()
     }
 }
