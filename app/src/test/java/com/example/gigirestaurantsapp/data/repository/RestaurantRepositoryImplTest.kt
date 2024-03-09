@@ -10,6 +10,7 @@ import com.example.gigirestaurantsapp.utils.LocationHelper
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.mockito.BDDMockito
+import org.mockito.BDDMockito.*
 import org.mockito.Mockito
 
 
@@ -28,8 +29,8 @@ class RestaurantRepositoryImplTest{
     fun should_calls_to_getRemoteRestaurants_when_there_are_not_local_restaurants(){
         runBlocking {
             val mutableListData = MutableLiveData(fakeRepository.getRemoteProducts())
-            BDDMockito.given(restaurantRemoteSource.getNearbyRestaurants(LOCATION)).willReturn(mutableListData)
-            BDDMockito.given(restaurantLocalSource.getNearbyRestaurants(LOCATION)).willReturn(listOf())
+            given(restaurantRemoteSource.getNearbyRestaurants(LOCATION)).willReturn(mutableListData)
+            given(restaurantLocalSource.getNearbyRestaurants(LOCATION)).willReturn(listOf())
             restaurantRepository.getNearbyRestaurants(LOCATION)
             Mockito.verify(restaurantRemoteSource).getNearbyRestaurants(LOCATION)
         }
@@ -38,9 +39,9 @@ class RestaurantRepositoryImplTest{
     @Test
     fun should_not_calls_to_getRemoteRestaurants_when_there_are_local_restaurants(){
         runBlocking {
-            BDDMockito.given(restaurantLocalSource.getRestaurantsBySearch(QUERY)).willReturn(listOf(fakeRepository.restaurant3))
+            given(restaurantLocalSource.getRestaurantsBySearch(QUERY)).willReturn(listOf(fakeRepository.restaurant3))
             restaurantRepository.getRestaurantsBySearch(QUERY)
-            Mockito.verify(restaurantRemoteSource, BDDMockito.never()).getRestaurantsBySearch(QUERY)
+            Mockito.verify(restaurantRemoteSource, never()).getRestaurantsBySearch(QUERY)
         }
     }
 }

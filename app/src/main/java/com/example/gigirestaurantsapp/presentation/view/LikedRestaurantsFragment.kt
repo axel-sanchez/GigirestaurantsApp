@@ -69,11 +69,11 @@ class LikedRestaurantsFragment : Fragment() {
         with(binding) {
 
             if (restaurants.isEmpty()) {
-                rvRestaurants.hide()
+                rvLikedRestaurants.hide()
                 tvErrorText.text = Constants.ApiError.EMPTY_LIKED_RESTAURANTS.text
                 cvEmptyState.show()
             } else {
-                rvRestaurants.show()
+                rvLikedRestaurants.show()
                 cvEmptyState.hide()
                 setAdapter(restaurants)
             }
@@ -86,7 +86,7 @@ class LikedRestaurantsFragment : Fragment() {
             restaurants.toMutableList(),
             itemClick
         )
-        with(binding.rvRestaurants) {
+        with(binding.rvLikedRestaurants) {
             layoutManager = LinearLayoutManager(context)
             adapter = restaurantsAdapter
         }

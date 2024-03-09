@@ -80,4 +80,15 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
     debugImplementation("androidx.fragment:fragment-testing:1.5.5")
+
+    //ANDROID TEST
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("org.mockito:mockito-android:3.12.4")
+    androidTestImplementation("com.android.support.test.espresso:espresso-intents:3.0.2")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:3.2.0")
+    androidTestImplementation("com.android.support.test:runner:1.0.2")
+    androidTestImplementation("com.android.support.test:rules:1.0.2")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation("androidx.test.espresso:espresso-idling-resource:3.5.1")
 }
