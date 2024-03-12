@@ -71,13 +71,13 @@ class LikedRestaurantsFragment : Fragment() {
             if (restaurants.isEmpty()) {
                 rvLikedRestaurants.hide()
                 tvErrorText.text = Constants.ApiError.EMPTY_LIKED_RESTAURANTS.text
-                cvEmptyState.show()
+                cvEmptyStateLiked.show()
             } else {
                 rvLikedRestaurants.show()
-                cvEmptyState.hide()
+                cvEmptyStateLiked.hide()
                 setAdapter(restaurants)
             }
-            cpiLoading.hide()
+            cpiLoadingLiked.hide()
         }
     }
 
